@@ -1,0 +1,281 @@
+{
+  "app": {
+    "name": "SendSmart Korea",
+    "tagline": "Pinakamahusay na palitan para sa pagpapadala ng pera"
+  },
+  "tabs": {
+    "compare": "Ikumpara",
+    "history": "Kasaysayan",
+    "settings": "Mga Setting",
+    "scan": "I-scan",
+    "dashboard": "Gastos",
+    "legal": "Legal na Tulong"
+  },
+  "compare": {
+    "title": "Live na Mga Rate",
+    "subtitle": "Ikumpara ang SentBe, GME at Hanpass",
+    "sendTo": "Magpadala sa",
+    "youSend": "Magpadala ka (KRW)",
+    "custom": "Pasadya",
+    "refresh": "I-refresh",
+    "lastUpdated": "Na-update {{time}}",
+    "pullToRefresh": "Hilahin para i-refresh"
+  },
+  "provider": {
+    "recipientGets": "Matatanggap ng Tatanggap",
+    "exchangeRate": "Palitan ng Pera",
+    "transferFee": "Bayad sa Paglipat",
+    "totalYouPay": "Kabuuang Babayaran Mo",
+    "speed": "Bilis",
+    "markupVsMid": "Markup kumpara sa mid-market",
+    "openApp": "Buksan ang {{name}} App",
+    "badges": {
+      "mostPopular": "Pinakasikat",
+      "epsWorkers": "Mga Manggagawang EPS",
+      "fastest": "Pinakamabilis ⚡"
+    }
+  },
+  "summary": {
+    "mostReceived": "Pinaka-maraming Tatanggapin",
+    "lowestFee": "Pinakamababang Bayad",
+    "fastestSpeed": "Pinakamabilis"
+  },
+  "banks": {
+    "title": "Kumpara sa mga Bangkong Koreano",
+    "subtitle": "Gaano karami ang singil ng mga bangko?",
+    "expand": "Ikumpara sa mga bangko",
+    "collapse": "Itago ang paghahambing sa bangko",
+    "warning": "Ang mga bangko ay nagsisingiil ng mas malaki. Ang mga bangkong Koreano ay nag-aaplay ng 1.7–1.9% na pagbabago sa palitan kasama ang ₩8,000–₩10,000 na bayad at tumatagal ng 2–5 araw ng trabaho.",
+    "columns": {
+      "bank": "Bangko",
+      "rate": "Rate",
+      "fee": "Bayad",
+      "recipient": "Tatanggap",
+      "difference": "vs Pinakamahusay"
+    }
+  },
+  "insight": {
+    "loading": "Kinakalkula ang pinakamahusay na opsyon…",
+    "placeholder": "Pumili ng destinasyon para makita ang rekomendasyon."
+  },
+  "feeNote": "Ang bayad sa paglipat ay sinisingil sa ibabaw ng iyong halagang ipapadala. Matatanggap ng tatanggap ang buong conversion ng iyong halagang ipapadala.",
+  "history": {
+    "title": "Kasaysayan ng Rate",
+    "period7": "7 araw",
+    "period14": "14 araw",
+    "period30": "30 araw",
+    "noData": "Wala pang kasaysayan. Bumalik pagkatapos makolekta ang mga rate.",
+    "tooltip": "Rate: {{rate}}\n{{time}}"
+  },
+  "settings": {
+    "title": "Mga Setting",
+    "language": {
+      "title": "Wika",
+      "subtitle": "Piliin ang iyong gustong wika"
+    },
+    "defaultCorridor": {
+      "title": "Default na Destinasyon",
+      "subtitle": "Ipapakita muna kapag binuksan ang app"
+    },
+    "notifications": {
+      "title": "Mga Abiso",
+      "rateAlert": "Alertuhin kapag nagbago ng 2%+ ang rate",
+      "dailySummary": "Araw-araw na buod ng rate ng 9am",
+      "comingSoon": "Paparating na"
+    },
+    "about": {
+      "title": "Tungkol",
+      "version": "Bersyon {{version}}",
+      "disclaimer": "Ang mga rate ay para lamang sa paghahambing — i-verify bago magpadala",
+      "notAffiliated": "Hindi kaakibat ng anumang provider",
+      "sentbeWebsite": "SentBe Website",
+      "gmeWebsite": "GME Website",
+      "hanpassWebsite": "Hanpass Website"
+    }
+  },
+  "errors": {
+    "fetchFailed": "Hindi ma-load ang mga rate. Pakisubukan muli.",
+    "noInternet": "Walang koneksyon — ipinapakita ang huling kilalang mga rate",
+    "tryAgain": "Subukan Muli",
+    "staleData": "⚠️ Ipinapakita ang mga rate mula {{time}}. Hilahin para i-refresh.",
+    "providerUnavailable": "Pansamantalang hindi available ang {{provider}}"
+  },
+  "loading": {
+    "rates": "Kinukuha ang live na mga rate…",
+    "history": "Nilo-load ang kasaysayan ng rate…"
+  },
+  "corridors": {
+    "PHP": "Pilipinas",
+    "VND": "Vietnam",
+    "NPR": "Nepal",
+    "IDR": "Indonesia",
+    "BDT": "Bangladesh",
+    "MNT": "Mongolia",
+    "USD": "USA",
+    "MYR": "Malaysia",
+    "THB": "Thailand",
+    "CNY": "Tsina"
+  },
+  "amounts": {
+    "preset1": "₩500K",
+    "preset2": "₩1M",
+    "preset3": "₩2M",
+    "preset4": "₩5M"
+  },
+  "scan": {
+    "title": "I-scan ang Receipt",
+    "kicker": "Aking Paggastos",
+    "heroTitle": "Subaybayan kung saan napupunta ang ",
+    "heroTitleAccent": "pera",
+    "subtitle": "I-scan ang anumang Korean receipt para awtomatikong ma-track ang iyong paggastos.",
+    "scanFailed": "Nabigo ang scan — pakisubukang muli.",
+    "takePhoto": "Kumuha ng Larawan",
+    "chooseGallery": "Pumili mula sa Gallery",
+    "recentScans": "Mga Kamakailang Scan",
+    "processing": "Binabasa ang receipt…",
+    "notReceipt": "Hindi mabasa ang receipt — subukan ang mas magandang ilaw",
+    "queued": "Naisave — ipoproseso kapag online",
+    "pendingBadge": "{{count}} nakabinbin",
+    "confirm": "Nadetect ang Receipt",
+    "discard": "Itapon",
+    "save": "I-save",
+    "editFields": "Maaari mong i-edit ang anumang field bago i-save",
+    "permissionCamera": "Kailangan ang permission ng camera para mag-scan ng receipts",
+    "permissionGallery": "Kailangan ang permission ng gallery para pumili ng mga larawan",
+    "privacy": {
+      "title": "Iyong Privacy",
+      "body": "Ang mga larawan ng receipt ay pino-process ng AI para kunin ang mga halaga at petsa. Ang mga larawan ay hindi itinatago sa aming mga server. Lahat ng iyong financial data ay nananatili sa device na ito.",
+      "confirm": "Sige ✓"
+    }
+  },
+  "dashboard": {
+    "title": "Aking Gastos",
+    "subtitle": "Alamin kung saan napupunta ang iyong pera sa isang sulyap.",
+    "totalSpent": "Kabuuang Gastos",
+    "sentHome": "Ipinadala sa Bahay",
+    "saved": "Naisave",
+    "spendingByCategory": "Gastos ayon sa Kategorya",
+    "weeklySpending": "Gastos Lingguhan",
+    "dailySpending": "Gastos Araw-araw",
+    "monthlySpending": "Gastos Buwanan",
+    "remittanceHistory": "Kasaysayan ng Padala",
+    "savingsGoal": "Layunin sa Pag-iipon",
+    "incomeVsSpend": "Kita kumpara Gastos",
+    "noData": "Wala pang transaksyon. Mag-scan ng resibo para magsimula.",
+    "addIncome": "Idagdag ang buwanang kita para subaybayan ang pag-iipon",
+    "transactions": "Mga Transaksyon",
+    "allCategories": "Lahat ng Kategorya",
+    "deleteConfirm": "Tanggalin ang transaksyong ito?",
+    "deleteYes": "Tanggalin",
+    "deleteNo": "Kanselahin"
+  },
+  "period": {
+    "today": "Ngayon",
+    "days7": "7 araw",
+    "days14": "14 araw",
+    "month1": "1 buwan",
+    "month2": "2 buwan",
+    "custom": "Pasadyang",
+    "selectRange": "Piliin ang saklaw ng petsa",
+    "cancel": "Kanselahin",
+    "apply": "Ilapat",
+    "daysSelected": "{{count}} araw napili"
+  },
+  "categories": {
+    "Remittance": "Remittance",
+    "Food & Groceries": "Pagkain at Groceries",
+    "Transport": "Transportasyon",
+    "Phone & Internet": "Telepono at Internet",
+    "Housing & Utilities": "Pabahay at Utilities",
+    "Medical": "Medikal",
+    "Cash Withdrawal": "Pag-withdraw ng Cash",
+    "Other": "Iba pa"
+  },
+  "receiptTypes": {
+    "remittance": "Remittance",
+    "atm": "Pag-withdraw sa ATM",
+    "store": "Bili sa Tindahan",
+    "restaurant": "Restaurant",
+    "utility": "Utility Bill",
+    "transport": "Transportasyon",
+    "medical": "Medikal",
+    "other": "Iba pa"
+  },
+  "legal": {
+    "title": "Legal na Katulong",
+    "subtitle": "Magtanong ng anumang bagay tungkol sa iyong mga karapatan sa Korea",
+    "domains": {
+      "employment": "Karapatan sa Trabaho",
+      "visa": "Visa",
+      "injury": "Aksidente sa Trabaho",
+      "contract": "Kontrata",
+      "realestate": "Pabahay",
+      "general": "Pangkalahatan"
+    },
+    "quickQuestionsLabel": "Mabilis na mga tanong",
+    "quickQuestions": [
+      "Natanggap ko ba ang tamang sahod?",
+      "Paano mag-renew ng E-9 visa?",
+      "Hindi nagbayad ng overtime ang aking amo",
+      "Nasaktan ako sa trabaho",
+      "Ano ang 확정일자 at kailangan ko ba ito?",
+      "Protektado ba ang aking deposito sa upa?",
+      "Kinuha ng aking amo ang aking pasaporte"
+    ],
+    "inputPlaceholder": "Itanong ang iyong katanungan…",
+    "holdToSpeak": "Pindutin upang magsalita",
+    "analyzeDocument": "Suriin ang dokumento",
+    "documentSubtitle": "Kunan ng litrato ang iyong kontrata, visa, o opisyal na sulat",
+    "emergencyContacts": "Emergency na Mga Contact",
+    "emergency": {
+      "title": "Emergency na Mga Contact",
+      "subtitle": "May karapatan ka anuman ang iyong visa status"
+    },
+    "response": {
+      "summary": "Buod",
+      "explanation": "Paliwanag",
+      "actionSteps": "Ano ang gagawin",
+      "note": "Mahalagang paalala",
+      "disclaimer": "Disclaimer",
+      "showDisclaimer": "Ipakita ang legal na disclaimer",
+      "hideDisclaimer": "Itago"
+    },
+    "document": {
+      "title": "Suriin ang Dokumento",
+      "takePhoto": "Kunan ng Larawan ang Dokumento",
+      "chooseGallery": "Pumili mula sa Gallery",
+      "choosePDF": "Pumili ng PDF",
+      "questionPlaceholder": "Ano ang gusto mong malaman tungkol sa dokumentong ito?",
+      "analyzing": "Sinusuri ang dokumento…",
+      "translation": "Pagsasalin",
+      "keyClauses": "Mga Pangunahing Probisyon",
+      "concernLevels": {
+        "ok": "OK — Karaniwang probisyon",
+        "warning": "Repasuhin — Di-pangkaraniwang probisyon",
+        "violation": "Problema — Maaaring ilegal"
+      }
+    },
+    "voice": {
+      "recording": "Nagre-record… bitawan para ipadala",
+      "processing": "Nag-iisip…",
+      "playing": "Nagpe-play ng tugon…",
+      "transcribed": "Sinabi mo:"
+    },
+    "hotlines": {
+      "title": "Mga Hotline ng Suporta",
+      "emergency": "Emergency",
+      "labor": "Karapatan sa Paggawa",
+      "immigration": "Immigrasyon",
+      "legalAid": "Libreng Tulong Legal",
+      "housing": "Suporta sa Pabahay",
+      "tapToCall": "I-tap para tumawag",
+      "available24": "Available 24/7"
+    },
+    "errors": {
+      "networkError": "Hindi makakonekta. Pakisubukang muli.",
+      "audioPermission": "Kailangan ng access sa mikropono para sa mga tanong sa boses",
+      "recordingFailed": "Nabigo ang pagre-record. Pakisubukang muli.",
+      "voiceUnavailable": "Hindi available ang voice recording sa device na ito."
+    }
+  }
+}

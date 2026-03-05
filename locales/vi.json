@@ -1,0 +1,281 @@
+{
+  "app": {
+    "name": "SendSmart Korea",
+    "tagline": "Tỷ giá tốt nhất để gửi tiền về nhà"
+  },
+  "tabs": {
+    "compare": "So sánh",
+    "history": "Lịch sử",
+    "settings": "Cài đặt",
+    "scan": "Quét",
+    "dashboard": "Chi tiêu",
+    "legal": "Hỗ trợ pháp lý"
+  },
+  "compare": {
+    "title": "Tỷ giá trực tiếp",
+    "subtitle": "So sánh SentBe, GME & Hanpass",
+    "sendTo": "Gửi đến",
+    "youSend": "Bạn gửi (KRW)",
+    "custom": "Tùy chỉnh",
+    "refresh": "Làm mới",
+    "lastUpdated": "Cập nhật {{time}}",
+    "pullToRefresh": "Kéo xuống để làm mới"
+  },
+  "provider": {
+    "recipientGets": "Người nhận được",
+    "exchangeRate": "Tỷ giá",
+    "transferFee": "Phí chuyển tiền",
+    "totalYouPay": "Tổng bạn trả",
+    "speed": "Tốc độ",
+    "markupVsMid": "Chênh lệch so với tỷ giá thị trường",
+    "openApp": "Mở ứng dụng {{name}}",
+    "badges": {
+      "mostPopular": "Phổ biến nhất",
+      "epsWorkers": "Công nhân EPS",
+      "fastest": "Nhanh nhất ⚡"
+    }
+  },
+  "summary": {
+    "mostReceived": "Nhận nhiều nhất",
+    "lowestFee": "Phí thấp nhất",
+    "fastestSpeed": "Nhanh nhất"
+  },
+  "banks": {
+    "title": "So với ngân hàng Hàn Quốc",
+    "subtitle": "Ngân hàng thu thêm bao nhiêu?",
+    "expand": "So sánh với ngân hàng",
+    "collapse": "Ẩn so sánh ngân hàng",
+    "warning": "Ngân hàng tính phí cao hơn nhiều. Ngân hàng Hàn Quốc áp chênh lệch tỷ giá 1,7–1,9% cộng phí ₩8.000–₩10.000 và mất 2–5 ngày làm việc.",
+    "columns": {
+      "bank": "Ngân hàng",
+      "rate": "Tỷ giá",
+      "fee": "Phí",
+      "recipient": "Người nhận",
+      "difference": "So với tốt nhất"
+    }
+  },
+  "insight": {
+    "loading": "Đang tính toán lựa chọn tốt nhất…",
+    "placeholder": "Chọn điểm đến để xem khuyến nghị."
+  },
+  "feeNote": "Phí chuyển tiền được tính thêm vào số tiền gửi. Người nhận sẽ nhận đủ số tiền chuyển đổi từ số tiền bạn gửi.",
+  "history": {
+    "title": "Lịch sử tỷ giá",
+    "period7": "7 ngày",
+    "period14": "14 ngày",
+    "period30": "30 ngày",
+    "noData": "Chưa có lịch sử. Kiểm tra lại sau khi dữ liệu được thu thập.",
+    "tooltip": "Tỷ giá: {{rate}}\n{{time}}"
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "language": {
+      "title": "Ngôn ngữ",
+      "subtitle": "Chọn ngôn ngữ ưa thích của bạn"
+    },
+    "defaultCorridor": {
+      "title": "Điểm đến mặc định",
+      "subtitle": "Hiển thị đầu tiên khi mở ứng dụng"
+    },
+    "notifications": {
+      "title": "Thông báo",
+      "rateAlert": "Cảnh báo khi tỷ giá thay đổi hơn 2%",
+      "dailySummary": "Tóm tắt tỷ giá hàng ngày lúc 9 giờ sáng",
+      "comingSoon": "Sắp ra mắt"
+    },
+    "about": {
+      "title": "Giới thiệu",
+      "version": "Phiên bản {{version}}",
+      "disclaimer": "Tỷ giá chỉ để so sánh — xác nhận trước khi gửi",
+      "notAffiliated": "Không liên kết với bất kỳ nhà cung cấp nào",
+      "sentbeWebsite": "Trang web SentBe",
+      "gmeWebsite": "Trang web GME",
+      "hanpassWebsite": "Trang web Hanpass"
+    }
+  },
+  "errors": {
+    "fetchFailed": "Không thể tải tỷ giá. Vui lòng thử lại.",
+    "noInternet": "Không có kết nối — hiển thị tỷ giá đã lưu",
+    "tryAgain": "Thử lại",
+    "staleData": "⚠️ Đang hiển thị tỷ giá từ {{time}}. Kéo xuống để làm mới.",
+    "providerUnavailable": "{{provider}} tạm thời không khả dụng"
+  },
+  "loading": {
+    "rates": "Đang lấy tỷ giá trực tiếp…",
+    "history": "Đang tải lịch sử tỷ giá…"
+  },
+  "corridors": {
+    "PHP": "Philippines",
+    "VND": "Việt Nam",
+    "NPR": "Nepal",
+    "IDR": "Indonesia",
+    "BDT": "Bangladesh",
+    "MNT": "Mông Cổ",
+    "USD": "Mỹ",
+    "MYR": "Malaysia",
+    "THB": "Thái Lan",
+    "CNY": "Trung Quốc"
+  },
+  "amounts": {
+    "preset1": "₩500K",
+    "preset2": "₩1 triệu",
+    "preset3": "₩2 triệu",
+    "preset4": "₩5 triệu"
+  },
+  "scan": {
+    "title": "Quét hóa đơn",
+    "kicker": "Chi tiêu của tôi",
+    "heroTitle": "Theo dõi tiền ",
+    "heroTitleAccent": "đi đâu",
+    "subtitle": "Quét bất kỳ hóa đơn Hàn Quốc nào để tự động theo dõi chi tiêu của bạn.",
+    "scanFailed": "Quét thất bại — vui lòng thử lại.",
+    "takePhoto": "Chụp ảnh",
+    "chooseGallery": "Chọn từ thư viện",
+    "recentScans": "Lần quét gần đây",
+    "processing": "Đang đọc hóa đơn…",
+    "notReceipt": "Không đọc được hóa đơn — thử ánh sáng tốt hơn",
+    "queued": "Đã lưu — sẽ xử lý khi có mạng",
+    "pendingBadge": "{{count}} đang chờ",
+    "confirm": "Đã phát hiện hóa đơn",
+    "discard": "Hủy",
+    "save": "Lưu",
+    "editFields": "Bạn có thể chỉnh bất kỳ trường nào trước khi lưu",
+    "permissionCamera": "Cần quyền camera để quét hóa đơn",
+    "permissionGallery": "Cần quyền thư viện để chọn ảnh",
+    "privacy": {
+      "title": "Quyền riêng tư của bạn",
+      "body": "Ảnh hóa đơn được AI xử lý để trích xuất số tiền và ngày tháng. Ảnh không lưu trên máy chủ của chúng tôi. Mọi dữ liệu tài chính của bạn chỉ nằm trên thiết bị này.",
+      "confirm": "Đã hiểu ✓"
+    }
+  },
+  "dashboard": {
+    "title": "Chi tiêu của tôi",
+    "subtitle": "Xem tiền của bạn đi đâu trong nháy mắt.",
+    "totalSpent": "Tổng chi tiêu",
+    "sentHome": "Gửi về nhà",
+    "saved": "Đã lưu",
+    "spendingByCategory": "Chi tiêu theo danh mục",
+    "weeklySpending": "Chi tiêu hàng tuần",
+    "dailySpending": "Chi tiêu hàng ngày",
+    "monthlySpending": "Chi tiêu hàng tháng",
+    "remittanceHistory": "Lịch sử gửi tiền",
+    "savingsGoal": "Mục tiêu tiết kiệm",
+    "incomeVsSpend": "Thu nhập so với chi tiêu",
+    "noData": "Chưa có giao dịch. Quét hóa đơn để bắt đầu.",
+    "addIncome": "Thêm thu nhập hàng tháng để theo dõi tiết kiệm",
+    "transactions": "Giao dịch",
+    "allCategories": "Tất cả danh mục",
+    "deleteConfirm": "Xóa giao dịch này?",
+    "deleteYes": "Xóa",
+    "deleteNo": "Hủy"
+  },
+  "period": {
+    "today": "Hôm nay",
+    "days7": "7 ngày",
+    "days14": "14 ngày",
+    "month1": "1 tháng",
+    "month2": "2 tháng",
+    "custom": "Tùy chọn",
+    "selectRange": "Chọn khoảng ngày",
+    "cancel": "Hủy",
+    "apply": "Áp dụng",
+    "daysSelected": "Đã chọn {{count}} ngày"
+  },
+  "categories": {
+    "Remittance": "Chuyển tiền",
+    "Food & Groceries": "Thực phẩm & tạp hóa",
+    "Transport": "Đi lại",
+    "Phone & Internet": "Điện thoại & Internet",
+    "Housing & Utilities": "Nhà ở & tiện ích",
+    "Medical": "Y tế",
+    "Cash Withdrawal": "Rút tiền mặt",
+    "Other": "Khác"
+  },
+  "receiptTypes": {
+    "remittance": "Chuyển tiền",
+    "atm": "Rút ATM",
+    "store": "Mua tại cửa hàng",
+    "restaurant": "Nhà hàng",
+    "utility": "Hóa đơn tiện ích",
+    "transport": "Đi lại",
+    "medical": "Y tế",
+    "other": "Khác"
+  },
+  "legal": {
+    "title": "Trợ lý Pháp lý",
+    "subtitle": "Hỏi bất kỳ điều gì về quyền của bạn tại Hàn Quốc",
+    "domains": {
+      "employment": "Quyền lao động",
+      "visa": "Thị thực",
+      "injury": "Tai nạn lao động",
+      "contract": "Hợp đồng",
+      "realestate": "Nhà ở",
+      "general": "Chung"
+    },
+    "quickQuestionsLabel": "Câu hỏi nhanh",
+    "quickQuestions": [
+      "Tôi có được trả đúng lương không?",
+      "Làm thế nào để gia hạn visa E-9?",
+      "Chủ không trả tiền làm thêm giờ",
+      "Tôi bị tai nạn lao động",
+      "확정일자 là gì và tôi có cần không?",
+      "Tiền đặt cọc thuê nhà có được bảo vệ không?",
+      "Chủ đã lấy hộ chiếu của tôi"
+    ],
+    "inputPlaceholder": "Đặt câu hỏi của bạn…",
+    "holdToSpeak": "Nhấn giữ để nói",
+    "analyzeDocument": "Phân tích tài liệu",
+    "documentSubtitle": "Chụp hợp đồng, visa hoặc thư chính thức của bạn",
+    "emergencyContacts": "Liên hệ khẩn cấp",
+    "emergency": {
+      "title": "Liên hệ khẩn cấp",
+      "subtitle": "Bạn có quyền bất kể tình trạng thị thực"
+    },
+    "response": {
+      "summary": "Tóm tắt",
+      "explanation": "Giải thích",
+      "actionSteps": "Cần làm gì",
+      "note": "Lưu ý quan trọng",
+      "disclaimer": "Tuyên bố từ chối",
+      "showDisclaimer": "Hiện tuyên bố từ chối pháp lý",
+      "hideDisclaimer": "Ẩn"
+    },
+    "document": {
+      "title": "Phân tích tài liệu",
+      "takePhoto": "Chụp ảnh tài liệu",
+      "chooseGallery": "Chọn từ thư viện",
+      "choosePDF": "Chọn PDF",
+      "questionPlaceholder": "Bạn muốn biết gì về tài liệu này?",
+      "analyzing": "Đang phân tích tài liệu…",
+      "translation": "Bản dịch",
+      "keyClauses": "Điều khoản chính",
+      "concernLevels": {
+        "ok": "Ổn — Điều khoản chuẩn",
+        "warning": "Xem lại — Điều khoản bất thường",
+        "violation": "Vấn đề — Có thể vi phạm pháp luật"
+      }
+    },
+    "voice": {
+      "recording": "Đang ghi… thả ra để gửi",
+      "processing": "Đang xử lý…",
+      "playing": "Đang phát phản hồi…",
+      "transcribed": "Bạn nói:"
+    },
+    "hotlines": {
+      "title": "Đường dây hỗ trợ",
+      "emergency": "Khẩn cấp",
+      "labor": "Quyền lao động",
+      "immigration": "Xuất nhập cảnh",
+      "legalAid": "Trợ giúp pháp lý miễn phí",
+      "housing": "Hỗ trợ nhà ở",
+      "tapToCall": "Chạm để gọi",
+      "available24": "Có mặt 24/7"
+    },
+    "errors": {
+      "networkError": "Không thể kết nối. Vui lòng thử lại.",
+      "audioPermission": "Cần quyền micro cho câu hỏi giọng nói",
+      "recordingFailed": "Ghi âm thất bại. Vui lòng thử lại.",
+      "voiceUnavailable": "Ghi âm giọng nói không khả dụng trên thiết bị này."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-sapphire: #1B6FEB;
+  --color-emerald: #00C896;
+  --color-amber-gold: #F5A623;
+  --color-rose: #FF4D6D;
+  --color-violet: #9B72FF;
+  --color-ink: #0C1220;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+  color: #0C1220;
+  background-color: #F4F6FB;
+}
+
+.mono {
+  font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono',
+    'Courier New', monospace;
+}

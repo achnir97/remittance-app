@@ -1,0 +1,281 @@
+{
+  "app": {
+    "name": "SendSmart Korea",
+    "tagline": "해외 송금 최저 환율 비교"
+  },
+  "tabs": {
+    "compare": "비교",
+    "history": "환율 추이",
+    "settings": "설정",
+    "scan": "스캔",
+    "dashboard": "지출",
+    "legal": "법률 도움"
+  },
+  "compare": {
+    "title": "실시간 환율",
+    "subtitle": "SentBe, GME & Hanpass 비교",
+    "sendTo": "받는 국가",
+    "youSend": "보내는 금액 (원)",
+    "custom": "직접 입력",
+    "refresh": "새로고침",
+    "lastUpdated": "{{time}} 업데이트",
+    "pullToRefresh": "당겨서 새로고침"
+  },
+  "provider": {
+    "recipientGets": "수취 금액",
+    "exchangeRate": "환율",
+    "transferFee": "송금 수수료",
+    "totalYouPay": "총 지불 금액",
+    "speed": "송금 속도",
+    "markupVsMid": "중간 환율 대비 마진",
+    "openApp": "{{name}} 앱 열기",
+    "badges": {
+      "mostPopular": "가장 인기",
+      "epsWorkers": "EPS 근로자",
+      "fastest": "가장 빠름 ⚡"
+    }
+  },
+  "summary": {
+    "mostReceived": "최다 수취",
+    "lowestFee": "최저 수수료",
+    "fastestSpeed": "가장 빠른 속도"
+  },
+  "banks": {
+    "title": "은행과 비교",
+    "subtitle": "은행은 얼마나 더 받나요?",
+    "expand": "은행과 비교하기",
+    "collapse": "은행 비교 숨기기",
+    "warning": "은행은 훨씬 많은 수수료를 부과합니다. 한국 시중은행은 환율 스프레드 1.7–1.9% 및 수수료 8,000–10,000원을 적용하며 2~5 영업일이 소요됩니다.",
+    "columns": {
+      "bank": "은행",
+      "rate": "환율",
+      "fee": "수수료",
+      "recipient": "수취 금액",
+      "difference": "최저 대비"
+    }
+  },
+  "insight": {
+    "loading": "최적 옵션 계산 중…",
+    "placeholder": "목적지를 선택하면 추천 정보가 표시됩니다."
+  },
+  "feeNote": "송금 수수료는 송금액에 추가로 부과됩니다. 수취인은 보낸 금액 전체에 대한 환전 금액을 받습니다.",
+  "history": {
+    "title": "환율 추이",
+    "period7": "7일",
+    "period14": "14일",
+    "period30": "30일",
+    "noData": "아직 데이터가 없습니다. 환율 수집 후 다시 확인해 주세요.",
+    "tooltip": "환율: {{rate}}\n{{time}}"
+  },
+  "settings": {
+    "title": "설정",
+    "language": {
+      "title": "언어",
+      "subtitle": "사용할 언어를 선택하세요"
+    },
+    "defaultCorridor": {
+      "title": "기본 수신 국가",
+      "subtitle": "앱 실행 시 먼저 표시됩니다"
+    },
+    "notifications": {
+      "title": "알림",
+      "rateAlert": "환율이 2% 이상 변동 시 알림",
+      "dailySummary": "매일 오전 9시 환율 요약 알림",
+      "comingSoon": "준비 중"
+    },
+    "about": {
+      "title": "정보",
+      "version": "버전 {{version}}",
+      "disclaimer": "환율은 비교 목적으로만 제공됩니다 — 송금 전 반드시 확인하세요",
+      "notAffiliated": "어떤 업체와도 제휴 관계가 아닙니다",
+      "sentbeWebsite": "SentBe 웹사이트",
+      "gmeWebsite": "GME 웹사이트",
+      "hanpassWebsite": "Hanpass 웹사이트"
+    }
+  },
+  "errors": {
+    "fetchFailed": "환율을 불러올 수 없습니다. 다시 시도해 주세요.",
+    "noInternet": "인터넷 연결 없음 — 마지막으로 저장된 환율을 표시합니다",
+    "tryAgain": "다시 시도",
+    "staleData": "⚠️ {{time}} 기준 환율입니다. 당겨서 새로고침하세요.",
+    "providerUnavailable": "{{provider}}를 일시적으로 사용할 수 없습니다"
+  },
+  "loading": {
+    "rates": "실시간 환율 조회 중…",
+    "history": "환율 추이 불러오는 중…"
+  },
+  "corridors": {
+    "PHP": "필리핀",
+    "VND": "베트남",
+    "NPR": "네팔",
+    "IDR": "인도네시아",
+    "BDT": "방글라데시",
+    "MNT": "몽골",
+    "USD": "미국",
+    "MYR": "말레이시아",
+    "THB": "태국",
+    "CNY": "중국"
+  },
+  "amounts": {
+    "preset1": "50만원",
+    "preset2": "100만원",
+    "preset3": "200만원",
+    "preset4": "500만원"
+  },
+  "scan": {
+    "title": "영수증 스캔",
+    "kicker": "내 지출",
+    "heroTitle": "돈이 어디로 ",
+    "heroTitleAccent": "가는지 추적하세요",
+    "subtitle": "한국 영수증을 스캔하면 지출이 자동으로 기록됩니다.",
+    "scanFailed": "스캔에 실패했습니다. 다시 시도해 주세요.",
+    "takePhoto": "사진 촬영",
+    "chooseGallery": "갤러리에서 선택",
+    "recentScans": "최근 스캔",
+    "processing": "영수증 읽는 중…",
+    "notReceipt": "영수증을 읽을 수 없습니다. 조명을 개선해 주세요.",
+    "queued": "저장됨 — 연결 시 처리됩니다.",
+    "pendingBadge": "{{count}} 대기 중",
+    "confirm": "영수증 감지됨",
+    "discard": "취소",
+    "save": "저장",
+    "editFields": "저장 전에 항목을 수정할 수 있습니다.",
+    "permissionCamera": "영수증 스캔에 카메라 권한이 필요합니다.",
+    "permissionGallery": "사진 선택에 갤러리 권한이 필요합니다.",
+    "privacy": {
+      "title": "개인정보",
+      "body": "영수증 사진은 AI가 금액과 날짜를 추출하기 위해 처리합니다. 이미지는 서버에 저장되지 않습니다. 모든 재무 데이터는 이 기기에만 보관됩니다.",
+      "confirm": "확인 ✓"
+    }
+  },
+  "dashboard": {
+    "title": "내 지출",
+    "subtitle": "지출 내역을 한눈에 파악하세요.",
+    "totalSpent": "총 지출",
+    "sentHome": "송금액",
+    "saved": "저장",
+    "spendingByCategory": "카테고리별 지출",
+    "weeklySpending": "주간 지출",
+    "dailySpending": "일간 지출",
+    "monthlySpending": "월간 지출",
+    "remittanceHistory": "송금 내역",
+    "savingsGoal": "저축 목표",
+    "incomeVsSpend": "수입 대비 지출",
+    "noData": "아직 거래가 없습니다. 영수증을 스캔해 보세요.",
+    "addIncome": "월 소득을 입력해 저축을 추적하세요",
+    "transactions": "거래",
+    "allCategories": "전체 카테고리",
+    "deleteConfirm": "이 거래를 삭제할까요?",
+    "deleteYes": "삭제",
+    "deleteNo": "취소"
+  },
+  "period": {
+    "today": "오늘",
+    "days7": "7일",
+    "days14": "14일",
+    "month1": "1개월",
+    "month2": "2개월",
+    "custom": "직접 선택",
+    "selectRange": "기간 선택",
+    "cancel": "취소",
+    "apply": "적용",
+    "daysSelected": "{{count}}일 선택됨"
+  },
+  "categories": {
+    "Remittance": "송금",
+    "Food & Groceries": "식료품",
+    "Transport": "교통",
+    "Phone & Internet": "통신",
+    "Housing & Utilities": "주거/공과금",
+    "Medical": "의료",
+    "Cash Withdrawal": "현금 인출",
+    "Other": "기타"
+  },
+  "receiptTypes": {
+    "remittance": "송금",
+    "atm": "ATM 인출",
+    "store": "매장 구매",
+    "restaurant": "음식점",
+    "utility": "공과금",
+    "transport": "교통",
+    "medical": "의료",
+    "other": "기타"
+  },
+  "legal": {
+    "title": "법률 도우미",
+    "subtitle": "한국에서의 권리에 대해 무엇이든 물어보세요",
+    "domains": {
+      "employment": "근로 권리",
+      "visa": "비자",
+      "injury": "산재",
+      "contract": "계약서",
+      "realestate": "주거",
+      "general": "일반"
+    },
+    "quickQuestionsLabel": "자주 묻는 질문",
+    "quickQuestions": [
+      "급여를 제대로 받았나요?",
+      "E-9 비자 갱신 방법은?",
+      "사장님이 초과근무수당을 안 줬어요",
+      "직장에서 다쳤어요",
+      "확정일자란 무엇이고 필요한가요?",
+      "임대 보증금이 보호되나요?",
+      "사장님이 제 여권을 가져갔어요"
+    ],
+    "inputPlaceholder": "질문을 입력하세요…",
+    "holdToSpeak": "누르고 말하기",
+    "analyzeDocument": "계약서 분석하기",
+    "documentSubtitle": "계약서, 비자, 공문서를 사진으로 찍으세요",
+    "emergencyContacts": "긴급 연락처",
+    "emergency": {
+      "title": "긴급 연락처",
+      "subtitle": "비자 상태와 관계없이 권리가 있습니다"
+    },
+    "response": {
+      "summary": "요약",
+      "explanation": "설명",
+      "actionSteps": "조치 사항",
+      "note": "참고 사항",
+      "disclaimer": "면책 조항",
+      "showDisclaimer": "법적 면책 조항 보기",
+      "hideDisclaimer": "숨기기"
+    },
+    "document": {
+      "title": "문서 분석",
+      "takePhoto": "문서 촬영",
+      "chooseGallery": "갤러리에서 선택",
+      "choosePDF": "PDF 선택",
+      "questionPlaceholder": "이 문서에 대해 무엇을 알고 싶으신가요?",
+      "analyzing": "문서 분석 중…",
+      "translation": "번역",
+      "keyClauses": "핵심 조항",
+      "concernLevels": {
+        "ok": "양호 — 일반 조항",
+        "warning": "검토 — 특이 조항",
+        "violation": "문제 — 위법 가능성"
+      }
+    },
+    "voice": {
+      "recording": "녹음 중… 손을 떼면 전송",
+      "processing": "생각 중…",
+      "playing": "답변 재생 중…",
+      "transcribed": "말씀하신 내용:"
+    },
+    "hotlines": {
+      "title": "지원 핫라인",
+      "emergency": "긴급",
+      "labor": "노동 권리",
+      "immigration": "출입국",
+      "legalAid": "무료 법률 상담",
+      "housing": "주거 지원",
+      "tapToCall": "탭하여 통화",
+      "available24": "24시간 이용 가능"
+    },
+    "errors": {
+      "networkError": "연결할 수 없습니다. 다시 시도해 주세요.",
+      "audioPermission": "음성 질문을 위해 마이크 권한이 필요합니다.",
+      "recordingFailed": "녹음에 실패했습니다. 다시 시도해 주세요.",
+      "voiceUnavailable": "이 기기에서는 음성 녹음이 지원되지 않습니다."
+    }
+  }
+}

@@ -1,0 +1,281 @@
+{
+  "app": {
+    "name": "SendSmart Korea",
+    "tagline": "Best rates for sending money home"
+  },
+  "tabs": {
+    "compare": "Compare",
+    "history": "History",
+    "scan": "Scan",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "legal": "Legal Help"
+  },
+  "compare": {
+    "title": "Live Rates",
+    "subtitle": "Compare SentBe, GME & Hanpass",
+    "sendTo": "Send to",
+    "youSend": "You send (KRW)",
+    "custom": "Custom",
+    "refresh": "Refresh",
+    "lastUpdated": "Updated {{time}}",
+    "pullToRefresh": "Pull to refresh"
+  },
+  "provider": {
+    "recipientGets": "Recipient Gets",
+    "exchangeRate": "Exchange Rate",
+    "transferFee": "Transfer Fee",
+    "totalYouPay": "Total You Pay",
+    "speed": "Speed",
+    "markupVsMid": "Rate markup vs mid-market",
+    "openApp": "Open {{name}} App",
+    "badges": {
+      "mostPopular": "Most Popular",
+      "epsWorkers": "EPS Workers",
+      "fastest": "Fastest ⚡"
+    }
+  },
+  "summary": {
+    "mostReceived": "Most Received",
+    "lowestFee": "Lowest Fee",
+    "fastestSpeed": "Fastest Speed"
+  },
+  "banks": {
+    "title": "vs Korean Banks",
+    "subtitle": "See how much more banks charge",
+    "expand": "Compare with banks",
+    "collapse": "Hide bank comparison",
+    "warning": "Banks charge significantly more. Korean banks apply a 1.7–1.9% exchange spread plus ₩8,000–₩10,000 in fees and take 2–5 business days.",
+    "columns": {
+      "bank": "Bank",
+      "rate": "Rate",
+      "fee": "Fee",
+      "recipient": "Recipient",
+      "difference": "vs Best"
+    }
+  },
+  "insight": {
+    "loading": "Calculating best option…",
+    "placeholder": "Select a destination to see a recommendation."
+  },
+  "feeNote": "Transfer fee is charged on top of your send amount. Your recipient gets the full conversion of your send amount.",
+  "history": {
+    "title": "Rate History",
+    "period7": "7 days",
+    "period14": "14 days",
+    "period30": "30 days",
+    "noData": "No history yet. Check back after rates are collected.",
+    "tooltip": "Rate: {{rate}}\n{{time}}"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": {
+      "title": "Language",
+      "subtitle": "Choose your preferred language"
+    },
+    "defaultCorridor": {
+      "title": "Default Destination",
+      "subtitle": "Shown first when you open the app"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "rateAlert": "Alert when rates change by 2%+",
+      "dailySummary": "Daily rate summary at 9am",
+      "comingSoon": "Coming soon"
+    },
+    "about": {
+      "title": "About",
+      "version": "Version {{version}}",
+      "disclaimer": "Rates are for comparison only — verify before sending",
+      "notAffiliated": "Not affiliated with any provider",
+      "sentbeWebsite": "SentBe Website",
+      "gmeWebsite": "GME Website",
+      "hanpassWebsite": "Hanpass Website"
+    }
+  },
+  "errors": {
+    "fetchFailed": "Could not load rates. Please try again.",
+    "noInternet": "No connection — showing last known rates",
+    "tryAgain": "Try Again",
+    "staleData": "⚠️ Showing rates from {{time}}. Pull to refresh.",
+    "providerUnavailable": "{{provider}} is temporarily unavailable"
+  },
+  "loading": {
+    "rates": "Fetching live rates…",
+    "history": "Loading rate history…"
+  },
+  "corridors": {
+    "PHP": "Philippines",
+    "VND": "Vietnam",
+    "NPR": "Nepal",
+    "IDR": "Indonesia",
+    "BDT": "Bangladesh",
+    "MNT": "Mongolia",
+    "USD": "USA",
+    "MYR": "Malaysia",
+    "THB": "Thailand",
+    "CNY": "China"
+  },
+  "amounts": {
+    "preset1": "₩500K",
+    "preset2": "₩1M",
+    "preset3": "₩2M",
+    "preset4": "₩5M"
+  },
+  "scan": {
+    "title": "Scan Receipt",
+    "kicker": "My Spending",
+    "heroTitle": "Track where money ",
+    "heroTitleAccent": "goes",
+    "subtitle": "Scan any Korean receipt to automatically track your spending.",
+    "scanFailed": "Scan failed — please try again",
+    "takePhoto": "Take a Photo",
+    "chooseGallery": "Choose from Gallery",
+    "recentScans": "Recent Scans",
+    "processing": "Reading receipt…",
+    "notReceipt": "Could not read receipt — try better lighting",
+    "queued": "Saved — will process when online",
+    "pendingBadge": "{{count}} pending",
+    "confirm": "Receipt Detected",
+    "discard": "Discard",
+    "save": "Save",
+    "editFields": "You can edit any field before saving",
+    "permissionCamera": "Camera permission is required to scan receipts",
+    "permissionGallery": "Gallery permission is required to choose photos",
+    "privacy": {
+      "title": "Your Privacy",
+      "body": "Receipt photos are processed by AI to extract amounts and dates. Images are not stored on our servers. All your financial data stays only on this device.",
+      "confirm": "Got it ✓"
+    }
+  },
+  "dashboard": {
+    "title": "My Spending",
+    "subtitle": "Understand where your money goes at a glance.",
+    "totalSpent": "Total Spent",
+    "sentHome": "Sent Home",
+    "saved": "Saved",
+    "spendingByCategory": "Spending by Category",
+    "weeklySpending": "Weekly Spending",
+    "dailySpending": "Daily Spending",
+    "monthlySpending": "Monthly Spending",
+    "remittanceHistory": "Sent Home History",
+    "savingsGoal": "Savings Goal",
+    "incomeVsSpend": "Income vs Spending",
+    "noData": "No transactions yet. Scan a receipt to get started.",
+    "addIncome": "Add your monthly income to track savings",
+    "transactions": "Transactions",
+    "allCategories": "All Categories",
+    "deleteConfirm": "Delete this transaction?",
+    "deleteYes": "Delete",
+    "deleteNo": "Cancel"
+  },
+  "period": {
+    "today": "Today",
+    "days7": "7 days",
+    "days14": "14 days",
+    "month1": "1 month",
+    "month2": "2 months",
+    "custom": "Custom",
+    "selectRange": "Select date range",
+    "cancel": "Cancel",
+    "apply": "Apply",
+    "daysSelected": "{{count}} days selected"
+  },
+  "categories": {
+    "Remittance": "Remittance",
+    "Food & Groceries": "Food & Groceries",
+    "Transport": "Transport",
+    "Phone & Internet": "Phone & Internet",
+    "Housing & Utilities": "Housing & Utilities",
+    "Medical": "Medical",
+    "Cash Withdrawal": "Cash Withdrawal",
+    "Other": "Other"
+  },
+  "receiptTypes": {
+    "remittance": "Remittance",
+    "atm": "ATM Withdrawal",
+    "store": "Store Purchase",
+    "restaurant": "Restaurant",
+    "utility": "Utility Bill",
+    "transport": "Transport",
+    "medical": "Medical",
+    "other": "Other"
+  },
+  "legal": {
+    "title": "Legal Assistant",
+    "subtitle": "Ask anything about your rights in Korea",
+    "domains": {
+      "employment": "Work Rights",
+      "visa": "Visa",
+      "injury": "Workplace Injury",
+      "contract": "My Contract",
+      "realestate": "Housing",
+      "general": "General"
+    },
+    "quickQuestionsLabel": "Quick questions",
+    "quickQuestions": [
+      "Was I paid correctly?",
+      "How do I renew my E-9 visa?",
+      "My employer didn't pay overtime",
+      "I was injured at work",
+      "What is 확정일자 and do I need it?",
+      "Is my rental deposit protected?",
+      "My employer took my passport"
+    ],
+    "inputPlaceholder": "Ask your question…",
+    "holdToSpeak": "Hold to speak",
+    "analyzeDocument": "Analyze a document",
+    "documentSubtitle": "Photo your contract, visa, or any official letter",
+    "emergencyContacts": "Emergency contacts",
+    "emergency": {
+      "title": "Emergency Contacts",
+      "subtitle": "You have rights regardless of your visa status"
+    },
+    "response": {
+      "summary": "Summary",
+      "explanation": "Explanation",
+      "actionSteps": "What to do",
+      "note": "Important note",
+      "disclaimer": "Disclaimer",
+      "showDisclaimer": "Show legal disclaimer",
+      "hideDisclaimer": "Hide"
+    },
+    "document": {
+      "title": "Analyze Document",
+      "takePhoto": "Take Photo of Document",
+      "chooseGallery": "Choose from Gallery",
+      "choosePDF": "Choose PDF",
+      "questionPlaceholder": "What do you want to know about this document?",
+      "analyzing": "Analyzing document…",
+      "translation": "Translation",
+      "keyClauses": "Key Clauses",
+      "concernLevels": {
+        "ok": "OK — Standard clause",
+        "warning": "Review — Unusual clause",
+        "violation": "Problem — May be illegal"
+      }
+    },
+    "voice": {
+      "recording": "Recording… release to send",
+      "processing": "Thinking…",
+      "playing": "Playing response…",
+      "transcribed": "You said:"
+    },
+    "hotlines": {
+      "title": "Support Hotlines",
+      "emergency": "Emergency",
+      "labor": "Labor Rights",
+      "immigration": "Immigration",
+      "legalAid": "Free Legal Aid",
+      "housing": "Housing Support",
+      "tapToCall": "Tap to call",
+      "available24": "Available 24/7"
+    },
+    "errors": {
+      "networkError": "Could not connect. Please try again.",
+      "audioPermission": "Microphone access is needed for voice questions",
+      "recordingFailed": "Recording failed. Please try again.",
+      "voiceUnavailable": "Voice recording is not available on this device."
+    }
+  }
+}
