@@ -35,6 +35,19 @@ import {
 import { SpendingCategory } from '../../types';
 import { TransactionRow } from '../../services/db';
 import { CATEGORY_KEYS } from '../../constants/categories';
+// TODO: Remove mock data imports when real data is live
+import {
+  USE_MOCK_DATA,
+  MOCK_TRANSACTIONS,
+  MOCK_REMITTANCES,
+  MOCK_INCOME,
+  MOCK_SAVINGS_GOAL,
+  filterMockByDate,
+  filterMockRemittances,
+  getMockDailyTotals,
+  getMockWeeklyTotals,
+  getMockMonthlyTotals,
+} from '../../constants/mockData';
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -124,13 +137,25 @@ export default function DashboardScreen() {
     );
   }, [from, to]);
 
-  const { data: transactions = [], isLoading: txLoading } = useTransactionsInRange(from, to);
-  const { data: dailyData = [] } = useDailyTotals(from, to);
-  const { data: weeklyData = [] } = useWeeklyTotals(from, to);
-  const { data: monthlyData = [] } = useMonthlyTotals(from, to);
-  const { data: remittances = [] } = useRemittancesInRange(from, to);
-  const { data: incomeData = [] } = useIncomeInRange(from, to);
-  const { data: savingsGoal } = useSavingsGoal();
+  const { data: realTx = [], isLoading: txLoading } = useTransactionsInRange(from, to);
+  const { data: realRemittances = [] } = useRemittancesInRange(from, to);
+  const { data: realIncome = [] } = useIncomeInRange(from, to);
+  const { data: realSavingsGoal } = useSavingsGoal();
+
+  // TODO: Remove mock data — replace with real DB data when live
+  const isMock = USE_MOCK_DATA && realTx.length === 0;
+  const transactions = isMock ? filterMockByDate(MOCK_TRANSACTIONS, from, to) : realTx;
+  const remittances = isMock ? filterMockRemittances(MOCK_REMITTANCES, from, to) : realRemittances;
+  const incomeData = isMock ? MOCK_INCOME.filter((r) => r.date >= from && r.date <= to) : realIncome;
+  const savingsGoal = isMock ? MOCK_SAVINGS_GOAL : realSavingsGoal;
+
+  const { data: realDaily = [] } = useDailyTotals(from, to);
+  const { data: realWeekly = [] } = useWeeklyTotals(from, to);
+  const { data: realMonthly = [] } = useMonthlyTotals(from, to);
+  // TODO: Remove mock aggregates
+  const dailyData = isMock ? getMockDailyTotals(transactions) : realDaily;
+  const weeklyData = isMock ? getMockWeeklyTotals(transactions) : realWeekly;
+  const monthlyData = isMock ? getMockMonthlyTotals(transactions) : realMonthly;
   const deleteMutation = useDeleteTransaction();
 
   const stats = useSpendingStats(transactions, from, to);
@@ -205,6 +230,13 @@ export default function DashboardScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
+        {/* Demo badge — TODO: Remove with mock data */}
+        {isMock && (
+          <View style={styles.demoBanner}>
+            <Text style={styles.demoText}>🧪 Showing demo data · Scan receipts to see your real spending</Text>
+          </View>
+        )}
+
         {/* ── Hero Header (inside ScrollView) ── */}
         <View style={styles.heroHeader}>
           <View style={styles.heroLeft}>
@@ -395,6 +427,24 @@ const styles = StyleSheet.create({
   netFlowSub: {
     fontSize: theme.fontSize.xs,
     color: theme.colors.textMuted,
+  },
+
+  // Demo banner
+  demoBanner: {
+    backgroundColor: 'rgba(155, 114, 255, 0.08)',
+    borderRadius: theme.radius.md,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
+    borderWidth: 1,
+    borderColor: 'rgba(155, 114, 255, 0.25)',
+  },
+  demoText: {
+    fontSize: theme.fontSize.xs,
+    color: theme.colors.accent,
+    textAlign: 'center',
+    fontWeight: '600',
+    letterSpacing: 0.2,
   },
 
   // Donut card wrapper

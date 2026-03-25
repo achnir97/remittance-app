@@ -22,6 +22,8 @@ import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { theme } from '../../constants/theme';
 import { Corridor, ProviderResult } from '../../types';
 import { i18n } from '../../locales/i18n';
+// TODO: Remove mock data when backend is live
+import { USE_MOCK_DATA, MOCK_RATES, scaleMockProviders } from '../../constants/mockData';
 
 export default function CompareScreen() {
   const corridor = useAppStore((s) => s.corridor);
@@ -64,7 +66,10 @@ export default function CompareScreen() {
   const cacheKey = `${corridor.from}-${corridor.to}`;
   const offlineProviders: ProviderResult[] = cachedRates[cacheKey] ?? [];
 
-  const providers = data?.providers ?? (isOffline ? offlineProviders : []);
+  const liveProviders = data?.providers ?? (isOffline ? offlineProviders : []);
+  // TODO: Remove mock fallback when backend is live
+  const isMock = USE_MOCK_DATA && !isLoading && liveProviders.length === 0;
+  const providers = isMock ? scaleMockProviders(MOCK_RATES.providers, sendAmount) : liveProviders;
   const sorted = [...providers].sort((a, b) => b.recipient_gets - a.recipient_gets);
 
   return (
@@ -105,6 +110,13 @@ export default function CompareScreen() {
           </View>
         )}
 
+        {/* Demo badge — TODO: Remove with mock data */}
+        {isMock && (
+          <View style={styles.demoBanner}>
+            <Text style={styles.demoText}>🧪 Demo data · KRW → NPR · 300,000 KRW baseline</Text>
+          </View>
+        )}
+
         {/* Stale warning */}
         {data?.stale && data.fetched_at && (
           <StaleWarning fetchedAt={data.fetched_at} />
@@ -117,7 +129,7 @@ export default function CompareScreen() {
         {isLoading && !isOffline && <LoadingSkeleton />}
 
         {/* Error state */}
-        {isError && !isOffline && (
+        {isError && !isOffline && !isMock && (
           <View style={styles.errorContainer}>
             <Text style={styles.errorIcon}>⚠️</Text>
             <Text style={styles.errorText}>{i18n.t('errors.fetchFailed')}</Text>
@@ -187,6 +199,20 @@ const styles = StyleSheet.create({
   scrollContent: {
     padding: theme.spacing.md,
     paddingBottom: theme.spacing.xl,
+  },
+  demoBanner: {
+    backgroundColor: 'rgba(155, 114, 255, 0.1)',
+    borderRadius: theme.radius.md,
+    padding: theme.spacing.sm,
+    marginBottom: theme.spacing.sm,
+    borderWidth: 1,
+    borderColor: 'rgba(155, 114, 255, 0.3)',
+  },
+  demoText: {
+    fontSize: theme.fontSize.xs,
+    color: theme.colors.accent,
+    textAlign: 'center',
+    fontWeight: '600',
   },
   offlineBanner: {
     backgroundColor: 'rgba(245, 166, 35, 0.1)',
