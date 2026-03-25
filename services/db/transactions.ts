@@ -1,4 +1,5 @@
 import type { OCRResult, SpendingCategory } from '../../types';
+import { sanitizeText } from '../../utils/validators';
 import { getDb } from './connection';
 import type {
   CategoryTotal,
@@ -33,7 +34,7 @@ export async function insertTransactionFromOCR(
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       ocr.type,
       date,
-      ocr.merchant ?? null,
+      ocr.merchant ? sanitizeText(ocr.merchant) : null,
       ocr.amount_krw ?? 0,
       ocr.category,
       JSON.stringify(ocr),

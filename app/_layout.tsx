@@ -12,6 +12,7 @@ import { i18n, normalizeLocale } from '../locales/i18n';
 import NetInfo from '@react-native-community/netinfo';
 import { retryPendingScans } from '../hooks/useOCR';
 import { getPendingScans } from '../services/db';
+import { cleanupOldReceiptImages } from '../services/imageProcessor';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { supabase } from '../lib/supabase';
 import { theme } from '../constants/theme';
@@ -86,21 +87,32 @@ export default function RootLayout() {
     }
   }, [user, initialized, userType, segments]);
 
-  // Refresh pending scan count on mount
+  // Refresh pending scan count on mount + clean up old receipt images
   useEffect(() => {
     getPendingScans()
       .then((rows) => setPendingCount(rows.length))
       .catch((err) => console.warn('[Layout] Failed to load pending scans:', err));
+
+    cleanupOldReceiptImages(30).catch((err) =>
+      console.warn('[Layout] Receipt cleanup failed:', err)
+    );
   }, []);
 
   // Handle deep links when app is already open (e.g. email confirmation while app is in background)
   useEffect(() => {
     const sub = Linking.addEventListener('url', async ({ url }) => {
+      // Validate the URL originates from our own app scheme before processing.
+      // A simple string includes() check is insufficient — an attacker-controlled
+      // URL like "https://evil.com/auth/callback?code=..." would pass it.
+      if (!url.startsWith('bridge://') && !url.startsWith('exp://')) return;
       if (!url.includes('auth/callback')) return;
+
       const parsed = Linking.parse(url);
       const code = parsed.queryParams?.code;
-      if (code) {
-        await supabase.auth.exchangeCodeForSession(String(code));
+      if (code && typeof code === 'string' && code.length > 0) {
+        await supabase.auth.exchangeCodeForSession(code).catch((err) =>
+          console.warn('[Layout] Deep link auth exchange failed:', err)
+        );
       }
     });
     return () => sub.remove();

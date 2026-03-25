@@ -17,6 +17,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { supabase } from '../../lib/supabase';
 import { theme } from '../../constants/theme';
+import { isValidEmail, isValidPassword } from '../../utils/validators';
 
 export default function SignupScreen() {
   const router = useRouter();
@@ -33,12 +34,19 @@ export default function SignupScreen() {
       Alert.alert('Missing fields', 'Please fill in all fields.');
       return;
     }
-    if (password !== confirmPassword) {
-      Alert.alert('Password mismatch', 'Passwords do not match.');
+    if (!isValidEmail(email)) {
+      Alert.alert('Invalid email', 'Please enter a valid email address.');
       return;
     }
-    if (password.length < 6) {
-      Alert.alert('Weak password', 'Password must be at least 6 characters.');
+    if (!isValidPassword(password)) {
+      Alert.alert(
+        'Weak password',
+        'Password must be at least 8 characters and include at least one letter and one number.'
+      );
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Password mismatch', 'Passwords do not match.');
       return;
     }
 
@@ -135,7 +143,7 @@ export default function SignupScreen() {
               <View style={styles.inputRow}>
                 <TextInput
                   style={[styles.input, styles.inputFlex]}
-                  placeholder="At least 6 characters"
+                  placeholder="Min 8 chars, 1 letter + 1 number"
                   placeholderTextColor={theme.colors.textMuted}
                   value={password}
                   onChangeText={setPassword}

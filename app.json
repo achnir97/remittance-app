@@ -8,13 +8,11 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
     "category": "finance",
-
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
       "backgroundColor": "#0C1220"
     },
-
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.bridge.lifekorea",
@@ -31,7 +29,6 @@
         "CFBundleAllowMixedLocalizations": true
       }
     },
-
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#0C1220",
@@ -64,29 +61,24 @@
       "allowBackup": false,
       "googleServicesFile": null
     },
-
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-
     "extra": {
       "eas": {
         "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
       }
     },
-
     "updates": {
       "url": "https://u.expo.dev/REPLACE_WITH_EAS_PROJECT_ID",
       "enabled": true,
       "checkAutomatically": "ON_LOAD",
       "fallbackToCacheTimeout": 0
     },
-
     "runtimeVersion": {
       "policy": "appVersion"
     },
-
     "plugins": [
       "expo-router",
       "expo-sqlite",
@@ -113,7 +105,8 @@
         {
           "microphonePermission": "Bridge uses your microphone for voice-guided legal assistance."
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }

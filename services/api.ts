@@ -1,6 +1,9 @@
 import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
 import { RatesResponse, HistoryResponse, Corridor, ScanReceiptResponse } from '../types';
 import { supabase } from '../lib/supabase';
+
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 10 MB
 
 // React Native FormData file shape — not covered by standard TS types
 interface RNFile {
@@ -65,6 +68,17 @@ export const api = {
   },
 
   scanReceipt: async (imageUri: string): Promise<ScanReceiptResponse> => {
+    // Validate the URI is a local file (never a remote URL or data: URI)
+    if (!imageUri.startsWith('file://') && !imageUri.startsWith('content://')) {
+      throw new Error('[API] scanReceipt: imageUri must be a local file:// or content:// URI');
+    }
+
+    // Enforce size limit before upload to prevent sending huge files
+    const info = await FileSystem.getInfoAsync(imageUri);
+    if (info.exists && info.size !== undefined && info.size > MAX_IMAGE_BYTES) {
+      throw new Error(`[API] scanReceipt: image exceeds ${MAX_IMAGE_BYTES / 1024 / 1024} MB limit`);
+    }
+
     const form = new FormData();
     const file: RNFile = { uri: imageUri, name: 'receipt.jpg', type: 'image/jpeg' };
     // React Native's FormData.append accepts { uri, name, type } but TS types only cover web Blob.

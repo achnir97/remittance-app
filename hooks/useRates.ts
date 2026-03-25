@@ -19,9 +19,10 @@ export function useRates() {
       setCachedRates(`${corridor.from}-${corridor.to}`, data.providers);
       return data;
     },
-    staleTime: 1000 * 60 * 5,
-    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 5,   // 5 min — rates change infrequently
+    gcTime: 1000 * 60 * 60,     // 1 hour — keep last result in memory for offline fallback
     retry: 2,
+    placeholderData: (prev) => prev, // prevents flash-of-empty when corridor switches
     enabled: isConnected !== false,
   });
 

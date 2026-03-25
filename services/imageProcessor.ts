@@ -38,3 +38,26 @@ export async function deleteLocalImage(localPath: string): Promise<void> {
     await FileSystem.deleteAsync(localPath, { idempotent: true });
   }
 }
+
+/**
+ * Delete receipt images older than `daysOld` days from the local receipts folder.
+ * Call on app launch to prevent unbounded storage growth.
+ */
+export async function cleanupOldReceiptImages(daysOld = 30): Promise<void> {
+  const dir = `${FileSystem.documentDirectory}receipts/`;
+  const dirInfo = await FileSystem.getInfoAsync(dir);
+  if (!dirInfo.exists) return;
+
+  const files = await FileSystem.readDirectoryAsync(dir);
+  const cutoffMs = Date.now() - daysOld * 24 * 60 * 60 * 1000;
+
+  for (const file of files) {
+    const path = `${dir}${file}`;
+    const info = await FileSystem.getInfoAsync(path);
+    if (info.exists && info.modificationTime && info.modificationTime * 1000 < cutoffMs) {
+      await FileSystem.deleteAsync(path, { idempotent: true }).catch((err) =>
+        console.warn('[ImageProcessor] Failed to delete old receipt:', err)
+      );
+    }
+  }
+}

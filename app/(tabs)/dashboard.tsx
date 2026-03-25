@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,7 @@ import { RemittanceTimeline } from '../../components/dashboard/RemittanceTimelin
 import { SavingsProgress } from '../../components/dashboard/SavingsProgress';
 import { CategoryCard } from '../../components/dashboard/CategoryCard';
 import { EmptyState } from '../../components/dashboard/EmptyState';
+import { LoadingSkeleton } from '../../components/LoadingSkeleton';
 import { useAppStore, PeriodPreset } from '../../store/useAppStore';
 import { useSpendingStats, daysToDateRange } from '../../hooks/useSpendingStats';
 import {
@@ -102,8 +103,9 @@ const sectionStyles = StyleSheet.create({
 // ─── Screen ──────────────────────────────────────────────────────────────────
 
 export default function DashboardScreen() {
-  const language = useAppStore((s) => s.language);
-  void language; // Re-render when language changes so i18n strings update
+  // Subscribe to language so i18n strings re-render when locale switches.
+  // useAppStore selector is referentially stable — no re-render cost beyond language changes.
+  useAppStore((s) => s.language);
   const selectedPeriod = useAppStore((s) => s.selectedPeriod);
   const customDateRange = useAppStore((s) => s.customDateRange);
   const setSelectedPeriod = useAppStore((s) => s.setSelectedPeriod);
@@ -122,7 +124,7 @@ export default function DashboardScreen() {
     );
   }, [from, to]);
 
-  const { data: transactions = [] } = useTransactionsInRange(from, to);
+  const { data: transactions = [], isLoading: txLoading } = useTransactionsInRange(from, to);
   const { data: dailyData = [] } = useDailyTotals(from, to);
   const { data: weeklyData = [] } = useWeeklyTotals(from, to);
   const { data: monthlyData = [] } = useMonthlyTotals(from, to);
@@ -161,32 +163,33 @@ export default function DashboardScreen() {
     [byCategory]
   );
 
-  const handlePeriodChange = (
-    preset: PeriodPreset,
-    custom?: { from: string; to: string }
-  ) => {
-    setSelectedPeriod(preset);
-    if (preset === 'custom' && custom) setCustomDateRange(custom);
-  };
+  const handlePeriodChange = useCallback(
+    (preset: PeriodPreset, custom?: { from: string; to: string }) => {
+      setSelectedPeriod(preset);
+      if (preset === 'custom' && custom) setCustomDateRange(custom);
+    },
+    [setSelectedPeriod, setCustomDateRange]
+  );
 
-  const handleDelete = (id: number) => {
-    deleteMutation.mutate(id);
-  };
+  const handleDelete = useCallback(
+    (id: number) => { deleteMutation.mutate(id); },
+    [deleteMutation]
+  );
 
   const hasData = transactions.length > 0;
 
-  // Net flow
-  const netFlow = totalIncome - stats.totalSpent;
-  const netPositive = netFlow >= 0;
-  const showNetFlow = totalIncome > 0;
+  const { netFlow, netPositive, showNetFlow } = useMemo(() => {
+    const flow = totalIncome - stats.totalSpent;
+    return { netFlow: flow, netPositive: flow >= 0, showNetFlow: totalIncome > 0 };
+  }, [totalIncome, stats.totalSpent]);
 
-  // Period subtitle text
-  const periodSubtitle =
-    selectedPeriod === 'today'
-      ? 'Today'
-      : selectedPeriod === 'custom'
-      ? `${formatDateShort(from)} – ${formatDateShort(to)}`
-      : `${formatDateShort(from)} – ${formatDateShort(to)}`;
+  const periodSubtitle = useMemo(
+    () =>
+      selectedPeriod === 'today'
+        ? 'Today'
+        : `${formatDateShort(from)} – ${formatDateShort(to)}`,
+    [selectedPeriod, from, to]
+  );
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -217,97 +220,102 @@ export default function DashboardScreen() {
           </View>
         </View>
 
-        {/* ── Summary Card ── */}
-        <SummaryCard stats={stats} compact={!hasData} />
-
-        {/* ── Net Flow chip ── */}
-        {showNetFlow && (
-          <View style={styles.netFlowRow}>
-            <Ionicons
-              name={netPositive ? 'trending-up-outline' : 'trending-down-outline'}
-              size={15}
-              color={netPositive ? theme.colors.success : theme.colors.error}
-              style={{ marginRight: 5 }}
-            />
-            <Text
-              style={[
-                styles.netFlowLabel,
-                { color: netPositive ? theme.colors.success : theme.colors.error },
-              ]}
-            >
-              NET FLOW
-            </Text>
-            <Text
-              style={[
-                styles.netFlowValue,
-                { color: netPositive ? theme.colors.success : theme.colors.error },
-              ]}
-            >
-              {netPositive ? '+' : ''}
-              {fmt(netFlow)}
-            </Text>
-            <Text style={styles.netFlowSub}>
-              {netPositive ? 'surplus' : 'deficit'} this period
-            </Text>
-          </View>
-        )}
-
-        {!hasData ? (
-          <EmptyState />
+        {/* ── Content (skeleton while loading) ── */}
+        {txLoading ? (
+          <LoadingSkeleton />
         ) : (
           <>
-            {/* ── Spending by Category ── */}
-            <SectionHeader label={i18n.t('dashboard.spendingByCategory')} />
-            <View style={styles.card}>
-              <DonutChart
-                data={categoryList.map((c) => ({
-                  category: c.category,
-                  total: c.total,
-                }))}
-              />
-            </View>
+            <SummaryCard stats={stats} compact={!hasData} />
 
-            {/* ── Bar Chart ── */}
-            <SpendingBarChart
-              dailyData={dailyData}
-              weeklyData={weeklyData}
-              monthlyData={monthlyData}
-              daysDiff={daysDiff}
-            />
-
-            {/* ── Income vs Spending ── */}
-            <SpendingVsIncome
-              monthlySpending={monthlyData}
-              income={incomeData}
-            />
-
-            {/* ── Remittance Timeline ── */}
-            {remittances.length > 0 && (
-              <RemittanceTimeline remittances={remittances} />
+            {/* ── Net Flow chip ── */}
+            {showNetFlow && (
+              <View style={styles.netFlowRow}>
+                <Ionicons
+                  name={netPositive ? 'trending-up-outline' : 'trending-down-outline'}
+                  size={15}
+                  color={netPositive ? theme.colors.success : theme.colors.error}
+                  style={{ marginRight: 5 }}
+                />
+                <Text
+                  style={[
+                    styles.netFlowLabel,
+                    { color: netPositive ? theme.colors.success : theme.colors.error },
+                  ]}
+                >
+                  NET FLOW
+                </Text>
+                <Text
+                  style={[
+                    styles.netFlowValue,
+                    { color: netPositive ? theme.colors.success : theme.colors.error },
+                  ]}
+                >
+                  {netPositive ? '+' : ''}
+                  {fmt(netFlow)}
+                </Text>
+                <Text style={styles.netFlowSub}>
+                  {netPositive ? 'surplus' : 'deficit'} this period
+                </Text>
+              </View>
             )}
 
-            {/* ── Savings Progress ── */}
-            {savingsGoal && totalIncome > 0 && (
-              <SavingsProgress
-                totalSpent={stats.totalSpent}
-                incomeKrw={totalIncome}
-                goalKrw={savingsGoal.target_krw}
-              />
+            {!hasData ? (
+              <EmptyState />
+            ) : (
+              <>
+                {/* ── Spending by Category ── */}
+                <SectionHeader label={i18n.t('dashboard.spendingByCategory')} />
+                <View style={styles.card}>
+                  <DonutChart
+                    data={categoryList.map((c) => ({
+                      category: c.category,
+                      total: c.total,
+                    }))}
+                  />
+                </View>
+
+                {/* ── Bar Chart ── */}
+                <SpendingBarChart
+                  dailyData={dailyData}
+                  weeklyData={weeklyData}
+                  monthlyData={monthlyData}
+                  daysDiff={daysDiff}
+                />
+
+                {/* ── Income vs Spending ── */}
+                <SpendingVsIncome
+                  monthlySpending={monthlyData}
+                  income={incomeData}
+                />
+
+                {/* ── Remittance Timeline ── */}
+                {remittances.length > 0 && (
+                  <RemittanceTimeline remittances={remittances} />
+                )}
+
+                {/* ── Savings Progress ── */}
+                {savingsGoal && totalIncome > 0 && (
+                  <SavingsProgress
+                    totalSpent={stats.totalSpent}
+                    incomeKrw={totalIncome}
+                    goalKrw={savingsGoal.target_krw}
+                  />
+                )}
+
+                {/* ── Category Breakdown ── */}
+                <SectionHeader label={i18n.t('dashboard.transactions')} />
+                {categoryList.map((item) => (
+                  <CategoryCard
+                    key={item.category}
+                    category={item.category}
+                    total={item.total}
+                    transactions={item.transactions}
+                    onDeleteTransaction={handleDelete}
+                    grandTotal={stats.totalSpent}
+                  />
+                ))}
+              </>
             )}
-
-            {/* ── Category Breakdown ── */}
-            <SectionHeader label={i18n.t('dashboard.transactions')} />
-
-            {categoryList.map((item) => (
-              <CategoryCard
-                key={item.category}
-                category={item.category}
-                total={item.total}
-                transactions={item.transactions}
-                onDeleteTransaction={handleDelete}
-                grandTotal={stats.totalSpent}
-              />
-            ))}
           </>
         )}
       </ScrollView>

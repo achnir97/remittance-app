@@ -16,7 +16,7 @@ interface Props {
   grandTotal?: number;
 }
 
-export function CategoryCard({
+export const CategoryCard = React.memo(function CategoryCard({
   category,
   total,
   transactions,
@@ -101,7 +101,7 @@ export function CategoryCard({
       )}
     </View>
   );
-}
+});
 
 const styles = StyleSheet.create({
   card: {

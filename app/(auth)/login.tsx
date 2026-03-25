@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,11 @@ import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../lib/supabase';
 import { theme } from '../../constants/theme';
+import { isValidEmail } from '../../utils/validators';
+
+// Brute-force protection: lock out after 5 failed attempts for 30 seconds.
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 30_000;
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -23,10 +28,27 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
 
-  async function handleLogin() {
+  const failedAttempts = useRef(0);
+  const passwordRef = useRef<TextInput>(null);
+
+  const isLockedOut = lockoutUntil !== null && Date.now() < lockoutUntil;
+  const lockoutSecsLeft = isLockedOut ? Math.ceil((lockoutUntil! - Date.now()) / 1000) : 0;
+
+  const handleLogin = useCallback(async () => {
+    if (isLockedOut) {
+      Alert.alert('Too many attempts', `Please wait ${lockoutSecsLeft}s before trying again.`);
+      return;
+    }
+
     if (!email.trim() || !password) {
       Alert.alert('Missing fields', 'Please enter your email and password.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      Alert.alert('Invalid email', 'Please enter a valid email address.');
       return;
     }
 
@@ -38,10 +60,24 @@ export default function LoginScreen() {
     setLoading(false);
 
     if (error) {
-      Alert.alert('Login failed', error.message);
+      failedAttempts.current += 1;
+      if (failedAttempts.current >= MAX_ATTEMPTS) {
+        const until = Date.now() + LOCKOUT_MS;
+        setLockoutUntil(until);
+        failedAttempts.current = 0;
+        Alert.alert(
+          'Account temporarily locked',
+          `Too many failed attempts. Please wait 30 seconds before trying again.`
+        );
+      } else {
+        Alert.alert('Login failed', error.message);
+      }
+    } else {
+      failedAttempts.current = 0;
+      setLockoutUntil(null);
+      // On success, onAuthStateChange in _layout.tsx handles the redirect
     }
-    // On success, onAuthStateChange in _layout.tsx handles the redirect
-  }
+  }, [email, password, isLockedOut, lockoutSecsLeft]);
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -68,6 +104,16 @@ export default function LoginScreen() {
           <Text style={styles.heading}>Welcome back</Text>
           <Text style={styles.subheading}>Sign in to continue your journey</Text>
 
+          {/* Lockout warning */}
+          {isLockedOut && (
+            <View style={styles.lockoutBanner}>
+              <Ionicons name="lock-closed-outline" size={14} color={theme.colors.error} />
+              <Text style={styles.lockoutText}>
+                Too many attempts. Wait {lockoutSecsLeft}s to try again.
+              </Text>
+            </View>
+          )}
+
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.field}>
@@ -82,6 +128,8 @@ export default function LoginScreen() {
                 autoCapitalize="none"
                 autoCorrect={false}
                 returnKeyType="next"
+                onSubmitEditing={() => passwordRef.current?.focus()}
+                accessibilityLabel="Email address"
               />
             </View>
 
@@ -89,6 +137,7 @@ export default function LoginScreen() {
               <Text style={styles.label}>Password</Text>
               <View style={styles.inputRow}>
                 <TextInput
+                  ref={passwordRef}
                   style={[styles.input, styles.inputFlex]}
                   placeholder="Your password"
                   placeholderTextColor={theme.colors.textMuted}
@@ -97,11 +146,13 @@ export default function LoginScreen() {
                   secureTextEntry={!showPassword}
                   returnKeyType="done"
                   onSubmitEditing={handleLogin}
+                  accessibilityLabel="Password"
                 />
                 <TouchableOpacity
                   style={styles.eyeBtn}
                   onPress={() => setShowPassword((v) => !v)}
                   hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
                 >
                   <Ionicons
                     name={showPassword ? 'eye-off-outline' : 'eye-outline'}
@@ -113,16 +164,17 @@ export default function LoginScreen() {
             </View>
 
             <Link href="/(auth)/forgot-password" asChild>
-              <TouchableOpacity style={styles.forgotRow}>
+              <TouchableOpacity style={styles.forgotRow} accessibilityLabel="Forgot password">
                 <Text style={styles.forgotText}>Forgot password?</Text>
               </TouchableOpacity>
             </Link>
 
             <TouchableOpacity
-              style={[styles.primaryBtn, loading && styles.primaryBtnDisabled]}
+              style={[styles.primaryBtn, (loading || isLockedOut) && styles.primaryBtnDisabled]}
               onPress={handleLogin}
-              disabled={loading}
+              disabled={loading || isLockedOut}
               activeOpacity={0.85}
+              accessibilityLabel="Sign in"
             >
               {loading ? (
                 <ActivityIndicator color="#fff" size="small" />
@@ -136,7 +188,7 @@ export default function LoginScreen() {
           <View style={styles.footer}>
             <Text style={styles.footerText}>Don't have an account? </Text>
             <Link href="/(auth)/signup" asChild>
-              <TouchableOpacity>
+              <TouchableOpacity accessibilityLabel="Go to sign up">
                 <Text style={styles.footerLink}>Sign up</Text>
               </TouchableOpacity>
             </Link>
@@ -199,6 +251,23 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.md,
     color: theme.colors.textMuted,
     marginBottom: theme.spacing.xl,
+  },
+  lockoutBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: theme.colors.error + '18',
+    borderWidth: 1,
+    borderColor: theme.colors.error + '44',
+    borderRadius: theme.radius.md,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 10,
+    marginBottom: theme.spacing.md,
+  },
+  lockoutText: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.error,
+    flex: 1,
   },
   form: {
     gap: theme.spacing.md,

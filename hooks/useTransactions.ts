@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
-  initDb,
   getRecentTransactions,
   insertTransactionFromOCR,
   deleteTransaction,
@@ -29,114 +28,95 @@ const REMITTANCE_KEY = (from: string, to: string) => ['spending', 'remittance', 
 const INCOME_KEY = (from: string, to: string) => ['income', from, to];
 const SAVINGS_GOAL_KEY = ['savings', 'goal'];
 
+// staleTime constants — prevents redundant refetches when navigating back
+const STALE_2MIN = 1000 * 60 * 2;
+const STALE_5MIN = 1000 * 60 * 5;
+const STALE_10MIN = 1000 * 60 * 10;
+
 export function useRecentTransactions(limit = 20) {
   return useQuery({
     queryKey: [...RECENT_KEY, limit],
-    queryFn: async () => {
-      await initDb();
-      return getRecentTransactions(limit);
-    },
+    queryFn: () => getRecentTransactions(limit),
+    staleTime: STALE_2MIN,
   });
 }
 
 export function useTransactionsInRange(from: string, to: string) {
   return useQuery({
     queryKey: RANGE_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getTransactionsInRange(from, to);
-    },
+    queryFn: () => getTransactionsInRange(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_2MIN,
   });
 }
 
 export function useSpendingByCategory(from: string, to: string) {
   return useQuery({
     queryKey: CATEGORY_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getSpendingByCategory(from, to);
-    },
+    queryFn: () => getSpendingByCategory(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_2MIN,
   });
 }
 
 export function useDailyTotals(from: string, to: string) {
   return useQuery({
     queryKey: DAILY_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getDailyTotals(from, to);
-    },
+    queryFn: () => getDailyTotals(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_2MIN,
   });
 }
 
 export function useWeeklyTotals(from: string, to: string) {
   return useQuery({
     queryKey: WEEKLY_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getWeeklyTotals(from, to);
-    },
+    queryFn: () => getWeeklyTotals(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_2MIN,
   });
 }
 
 export function useMonthlyTotals(from: string, to: string) {
   return useQuery({
     queryKey: MONTHLY_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getMonthlyTotals(from, to);
-    },
+    queryFn: () => getMonthlyTotals(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_2MIN,
   });
 }
 
 export function useRemittancesInRange(from: string, to: string) {
   return useQuery({
     queryKey: REMITTANCE_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getRemittancesInRange(from, to);
-    },
+    queryFn: () => getRemittancesInRange(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_5MIN,
   });
 }
 
 export function useIncomeInRange(from: string, to: string) {
   return useQuery({
     queryKey: INCOME_KEY(from, to),
-    queryFn: async () => {
-      await initDb();
-      return getIncomeInRange(from, to);
-    },
+    queryFn: () => getIncomeInRange(from, to),
     enabled: !!from && !!to,
+    staleTime: STALE_5MIN,
   });
 }
 
 export function useSavingsGoal() {
   return useQuery({
     queryKey: SAVINGS_GOAL_KEY,
-    queryFn: async () => {
-      await initDb();
-      return getSavingsGoal();
-    },
+    queryFn: () => getSavingsGoal(),
+    staleTime: STALE_10MIN,
   });
 }
 
 export function useSaveTransactionFromOCR() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: {
-      ocr: OCRResult;
-      imagePath: string | null;
-      confirmed: boolean;
-    }) => {
-      await initDb();
-      return insertTransactionFromOCR(params.ocr, params.imagePath, params.confirmed);
-    },
+    mutationFn: (params: { ocr: OCRResult; imagePath: string | null; confirmed: boolean }) =>
+      insertTransactionFromOCR(params.ocr, params.imagePath, params.confirmed),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: RECENT_KEY });
       qc.invalidateQueries({ queryKey: ['transactions', 'range'] });
@@ -148,10 +128,7 @@ export function useSaveTransactionFromOCR() {
 export function useDeleteTransaction() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (id: number) => {
-      await initDb();
-      return deleteTransaction(id);
-    },
+    mutationFn: (id: number) => deleteTransaction(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: RECENT_KEY });
       qc.invalidateQueries({ queryKey: ['transactions', 'range'] });
@@ -163,10 +140,8 @@ export function useDeleteTransaction() {
 export function useUpdateTransactionCategory() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { id: number; category: SpendingCategory }) => {
-      await initDb();
-      return updateTransactionCategory(params.id, params.category);
-    },
+    mutationFn: (params: { id: number; category: SpendingCategory }) =>
+      updateTransactionCategory(params.id, params.category),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: RECENT_KEY });
       qc.invalidateQueries({ queryKey: ['spending', 'category'] });
@@ -177,14 +152,8 @@ export function useUpdateTransactionCategory() {
 export function useInsertIncome() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: {
-      date: string;
-      amount_krw: number;
-      source?: string;
-    }) => {
-      await initDb();
-      return insertIncome(params.date, params.amount_krw, params.source);
-    },
+    mutationFn: (params: { date: string; amount_krw: number; source?: string }) =>
+      insertIncome(params.date, params.amount_krw, params.source),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['income'] });
     },
@@ -194,14 +163,8 @@ export function useInsertIncome() {
 export function useUpsertSavingsGoal() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: {
-      name: string;
-      target_krw: number;
-      period: 'monthly' | 'weekly';
-    }) => {
-      await initDb();
-      return upsertSavingsGoal(params.name, params.target_krw, params.period);
-    },
+    mutationFn: (params: { name: string; target_krw: number; period: 'monthly' | 'weekly' }) =>
+      upsertSavingsGoal(params.name, params.target_krw, params.period),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: SAVINGS_GOAL_KEY });
     },
