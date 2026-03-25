@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { RatesResponse, HistoryResponse, Corridor, ScanReceiptResponse } from '../types';
+import { supabase } from '../lib/supabase';
 
 // React Native FormData file shape — not covered by standard TS types
 interface RNFile {
@@ -11,6 +12,15 @@ interface RNFile {
 export const client = axios.create({
   baseURL: process.env.EXPO_PUBLIC_API_URL,
   timeout: 12000,
+});
+
+// Attach Supabase JWT to every request if a session exists
+client.interceptors.request.use(async (config) => {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (session?.access_token) {
+    config.headers.Authorization = `Bearer ${session.access_token}`;
+  }
+  return config;
 });
 
 // Centralized error logging: distinguishes server errors from network failures

@@ -1,6 +1,13 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Svg, { Rect, Text as SvgText, Line } from 'react-native-svg';
+import Svg, {
+  Rect,
+  Text as SvgText,
+  Line,
+  Defs,
+  LinearGradient,
+  Stop,
+} from 'react-native-svg';
 import { DailyTotal, WeeklyTotal, MonthlyTotal } from '../../services/db';
 import { theme } from '../../constants/theme';
 import { i18n } from '../../locales/i18n';
@@ -48,13 +55,28 @@ export function SpendingBarChart({ dailyData, weeklyData, monthlyData, daysDiff 
   }
 
   const maxVal = Math.max(...data.map((d) => d.value), 1);
+  const maxIdx = data.findIndex((d) => d.value === maxVal);
   const barW = Math.max(8, Math.min(32, (CHART_W - 16) / data.length - 4));
+  const showLabels = data.length <= 14;
 
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{i18n.t(titleKey)}</Text>
       <Svg width={CHART_W} height={CHART_H + LABEL_H}>
-        {/* Baseline */}
+        <Defs>
+          {/* Normal bar gradient */}
+          <LinearGradient id="spendBarGrad" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor={theme.colors.primary} stopOpacity="1" />
+            <Stop offset="1" stopColor="#0C1E3C" stopOpacity="0.4" />
+          </LinearGradient>
+          {/* Highlight bar gradient */}
+          <LinearGradient id="spendBarGradHigh" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#60AAFF" stopOpacity="1" />
+            <Stop offset="1" stopColor="#1B4080" stopOpacity="1" />
+          </LinearGradient>
+        </Defs>
+
+        {/* Axis baseline */}
         <Line
           x1={0}
           y1={CHART_H}
@@ -68,6 +90,8 @@ export function SpendingBarChart({ dailyData, weeklyData, monthlyData, daysDiff 
           const h = Math.max(4, (d.value / maxVal) * BAR_MAX_H);
           const x = (i * CHART_W) / data.length + (CHART_W / data.length - barW) / 2;
           const y = CHART_H - h;
+          const isMax = i === maxIdx;
+          const gradId = isMax ? 'spendBarGradHigh' : 'spendBarGrad';
 
           return (
             <React.Fragment key={i}>
@@ -76,11 +100,28 @@ export function SpendingBarChart({ dailyData, weeklyData, monthlyData, daysDiff 
                 y={y}
                 width={barW}
                 height={h}
-                rx={4}
-                fill={theme.colors.green}
-                opacity={0.85}
+                rx={5}
+                fill={`url(#${gradId})`}
               />
-              {data.length <= 14 && (
+              {/* Value label above tallest bar */}
+              {isMax && data.length <= 20 && (
+                <SvgText
+                  x={x + barW / 2}
+                  y={y - 5}
+                  fontSize={9}
+                  fill={theme.colors.primaryLight}
+                  textAnchor="middle"
+                  fontWeight="600"
+                >
+                  {d.value >= 1_000_000
+                    ? `₩${(d.value / 1_000_000).toFixed(1)}M`
+                    : d.value >= 10_000
+                    ? `₩${Math.round(d.value / 1_000)}K`
+                    : `₩${d.value.toLocaleString()}`}
+                </SvgText>
+              )}
+              {/* Date label */}
+              {showLabels && (
                 <SvgText
                   x={x + barW / 2}
                   y={CHART_H + 16}
@@ -101,8 +142,8 @@ export function SpendingBarChart({ dailyData, weeklyData, monthlyData, daysDiff 
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.radius.lg,
+    backgroundColor: theme.colors.bg2,
+    borderRadius: theme.radius.xl,
     padding: theme.spacing.md,
     borderWidth: 1,
     borderColor: theme.colors.border,

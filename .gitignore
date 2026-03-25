@@ -30,8 +30,18 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# local env files — never commit real credentials
+.env
+.env.local
 .env*.local
+
+# Claude Code internal
+.claude/
+
+# EAS / store credentials
+google-play-service-account.json
+*.mobileprovision
+GoogleService-Info.plist
 
 # typescript
 *.tsbuildinfo

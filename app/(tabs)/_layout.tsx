@@ -34,6 +34,15 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
+        name="home"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="index"
         options={{
           title: i18n.t('tabs.compare'),
@@ -64,27 +73,21 @@ export default function TabLayout() {
         name="dashboard"
         options={{
           title: i18n.t('tabs.dashboard'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="pie-chart-outline" size={size} color={color} />
-          ),
+          href: null, // hidden from tab bar; accessible from Home
         }}
       />
       <Tabs.Screen
         name="legal"
         options={{
           title: i18n.t('tabs.legal'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="document-text-outline" size={size} color={color} />
-          ),
+          href: null,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: i18n.t('tabs.settings'),
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
-          ),
+          href: null,
         }}
       />
     </Tabs>

@@ -1,35 +1,119 @@
 {
   "expo": {
-    "name": "RateCompare",
-    "slug": "remittance-app",
+    "name": "Bridge",
+    "slug": "bridge-life-korea",
     "version": "1.0.0",
-    "scheme": "remittance",
+    "scheme": "bridge",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "dark",
+    "category": "finance",
+
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#0C1220"
     },
+
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": false,
+      "bundleIdentifier": "com.bridge.lifekorea",
+      "buildNumber": "1",
+      "minimumOsVersion": "14.0",
+      "requiresFullScreen": false,
+      "usesNonExemptEncryption": false,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Bridge uses your camera to scan receipts and automatically extract transaction details for expense tracking.",
+        "NSPhotoLibraryUsageDescription": "Bridge accesses your photo library to let you scan existing receipt images for expense tracking.",
+        "NSPhotoLibraryAddOnlyUsageDescription": "Bridge may save processed receipt images to your library.",
+        "NSMicrophoneUsageDescription": "Bridge uses the microphone for voice-guided legal help features.",
+        "NSUserNotificationsDescription": "Bridge sends reminders for pending transactions and important rate alerts.",
+        "CFBundleAllowMixedLocalizations": true
+      }
     },
+
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#0C1220",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "package": "com.bridge.lifekorea",
+      "versionCode": 1,
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 35,
+      "minSdkVersion": 24,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.INTERNET",
+        "android.permission.VIBRATE",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "blockedPermissions": [
+        "android.permission.READ_CONTACTS",
+        "android.permission.WRITE_CONTACTS",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ],
+      "predictiveBackGestureEnabled": true,
+      "allowBackup": false,
+      "googleServicesFile": null
     },
+
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
+
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      }
+    },
+
+    "updates": {
+      "url": "https://u.expo.dev/REPLACE_WITH_EAS_PROJECT_ID",
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 0
+    },
+
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+
     "plugins": [
       "expo-router",
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-asset",
+      "expo-font",
+      "expo-localization",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Bridge uses your camera to scan receipts and extract transaction details automatically.",
+          "microphonePermission": "Bridge uses the microphone for voice-assisted legal guidance features.",
+          "recordAudioAndroid": true
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Bridge accesses your photos to let you scan receipt images for expense tracking.",
+          "cameraPermission": "Bridge uses your camera to scan receipts."
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Bridge uses your microphone for voice-guided legal assistance."
+        }
+      ]
     ]
   }
 }

@@ -7,9 +7,12 @@ import {
   StyleSheet,
   ScrollView,
   Linking,
+  Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAppStore } from '../../store/useAppStore';
+import { Ionicons } from '@expo/vector-icons';
+import { useAppStore, UserType } from '../../store/useAppStore';
+import { useAuthStore } from '../../store/useAuthStore';
 import { CorridorPicker } from '../../components/CorridorPicker';
 import { theme } from '../../constants/theme';
 import { Corridor, Language } from '../../types';
@@ -17,6 +20,15 @@ import { PROVIDER_LINKS } from '../../constants/providerLinks';
 import { PROVIDERS } from '../../constants/providers';
 import { i18n } from '../../locales/i18n';
 import Constants from 'expo-constants';
+import { supabase } from '../../lib/supabase';
+import { useRouter } from 'expo-router';
+
+const USER_TYPE_META: Record<UserType, { emoji: string; label: string; color: string }> = {
+  worker:   { emoji: '👷', label: 'Migrant Worker',        color: '#00C896' },
+  student:  { emoji: '🎓', label: 'International Student', color: '#60C3FF' },
+  tourist:  { emoji: '✈️', label: 'Tourist',               color: '#F5A623' },
+  resident: { emoji: '🏡', label: 'Long-term Resident',    color: '#9B72FF' },
+};
 
 // All 9 languages shown in their own native script — critical for non-English readers
 const LANGUAGES: { code: Language; nativeLabel: string }[] = [
@@ -36,6 +48,9 @@ export default function SettingsScreen() {
   const setLanguage = useAppStore((s) => s.setLanguage);
   const corridor = useAppStore((s) => s.corridor);
   const setCorridor = useAppStore((s) => s.setCorridor);
+  const userType = useAppStore((s) => s.userType);
+  const user = useAuthStore((s) => s.user);
+  const router = useRouter();
 
   const handleLanguage = useCallback(
     (lang: Language) => {
@@ -48,6 +63,17 @@ export default function SettingsScreen() {
     (c: Corridor) => setCorridor(c),
     [setCorridor]
   );
+
+  const handleSignOut = useCallback(() => {
+    Alert.alert('Sign out', 'Are you sure you want to sign out?', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Sign out',
+        style: 'destructive',
+        onPress: () => supabase.auth.signOut(),
+      },
+    ]);
+  }, []);
 
   const appVersion = Constants.expoConfig?.version ?? '1.0.0';
 
@@ -103,6 +129,60 @@ export default function SettingsScreen() {
             label={i18n.t('settings.notifications.dailySummary')}
             comingSoonLabel={i18n.t('settings.notifications.comingSoon')}
           />
+        </View>
+
+        {/* My Profile section */}
+        <Text style={styles.sectionHeader}>My Profile</Text>
+        <Text style={styles.sectionSubtitle}>Personalizes what Bridge shows you</Text>
+        <View style={styles.card}>
+          {userType ? (() => {
+            const meta = USER_TYPE_META[userType];
+            return (
+              <TouchableOpacity
+                style={styles.profileRow}
+                onPress={() => router.navigate('/(onboarding)/user-type' as never)}
+                activeOpacity={0.7}
+              >
+                <View style={[styles.profileIconBox, { backgroundColor: meta.color + '18' }]}>
+                  <Text style={{ fontSize: 22 }}>{meta.emoji}</Text>
+                </View>
+                <View style={styles.profileInfo}>
+                  <Text style={styles.profileLabel}>{meta.label}</Text>
+                  <Text style={styles.profileSub}>Tap to change your profile type</Text>
+                </View>
+                <Ionicons name="chevron-forward" size={16} color={theme.colors.textMuted} />
+              </TouchableOpacity>
+            );
+          })() : (
+            <TouchableOpacity
+              style={styles.profileRow}
+              onPress={() => router.navigate('/(onboarding)/user-type' as never)}
+              activeOpacity={0.7}
+            >
+              <View style={[styles.profileIconBox, { backgroundColor: theme.colors.bg3 }]}>
+                <Ionicons name="person-outline" size={22} color={theme.colors.textMuted} />
+              </View>
+              <View style={styles.profileInfo}>
+                <Text style={styles.profileLabel}>Set your profile</Text>
+                <Text style={styles.profileSub}>Personalize Bridge for your needs</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={16} color={theme.colors.textMuted} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Account section */}
+        <Text style={styles.sectionHeader}>Account</Text>
+        <View style={styles.card}>
+          <View style={styles.accountRow}>
+            <Ionicons name="person-circle-outline" size={20} color={theme.colors.textMuted} />
+            <Text style={styles.accountEmail} numberOfLines={1}>{user?.email ?? '—'}</Text>
+          </View>
+          <View style={styles.divider} />
+          <TouchableOpacity style={styles.signOutRow} onPress={handleSignOut} activeOpacity={0.7}>
+            <Ionicons name="log-out-outline" size={18} color={theme.colors.error} />
+            <Text style={styles.signOutText}>Sign Out</Text>
+          </TouchableOpacity>
         </View>
 
         {/* About section */}
@@ -172,6 +252,30 @@ const styles = StyleSheet.create({
   safe: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: theme.spacing.md,
+    gap: theme.spacing.md,
+  },
+  profileIconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: theme.radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  profileInfo: { flex: 1 },
+  profileLabel: {
+    fontSize: theme.fontSize.md,
+    fontWeight: '700',
+    color: theme.colors.textPrimary,
+  },
+  profileSub: {
+    fontSize: theme.fontSize.xs,
+    color: theme.colors.textMuted,
+    marginTop: 2,
   },
   header: {
     paddingHorizontal: theme.spacing.md,
@@ -303,5 +407,29 @@ const styles = StyleSheet.create({
     fontSize: theme.fontSize.sm,
     color: theme.colors.textMuted,
     lineHeight: 18,
+  },
+  accountRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 14,
+  },
+  accountEmail: {
+    flex: 1,
+    fontSize: theme.fontSize.md,
+    color: theme.colors.textSecondary,
+  },
+  signOutRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: 14,
+  },
+  signOutText: {
+    fontSize: theme.fontSize.md,
+    color: theme.colors.error,
+    fontWeight: '500',
   },
 });

@@ -7,6 +7,7 @@ import { i18n, normalizeLocale, SUPPORTED_LOCALES, SupportedLocale } from '../lo
 import { getLocales } from 'expo-localization';
 
 export type PeriodPreset = 'today' | '7d' | '14d' | '1m' | '2m' | 'custom';
+export type UserType = 'worker' | 'student' | 'tourist' | 'resident';
 
 function detectLanguage(): Language {
   const deviceLocale = getLocales()[0]?.languageCode ?? 'en';
@@ -40,6 +41,9 @@ interface AppStore {
 
   privacyNoticeSeen: boolean;
   setPrivacyNoticeSeen: (seen: boolean) => void;
+
+  userType: UserType | null;
+  setUserType: (type: UserType | null) => void;
 }
 
 export const useAppStore = create<AppStore>()(
@@ -79,6 +83,9 @@ export const useAppStore = create<AppStore>()(
 
       privacyNoticeSeen: false,
       setPrivacyNoticeSeen: (seen) => set({ privacyNoticeSeen: seen }),
+
+      userType: null,
+      setUserType: (type) => set({ userType: type }),
     }),
     {
       name: 'remittance-app-store',
@@ -91,6 +98,7 @@ export const useAppStore = create<AppStore>()(
         selectedPeriod: state.selectedPeriod,
         customDateRange: state.customDateRange,
         privacyNoticeSeen: state.privacyNoticeSeen,
+        userType: state.userType,
       }),
       onRehydrateStorage: () => (state) => {
         if (state?.language) {

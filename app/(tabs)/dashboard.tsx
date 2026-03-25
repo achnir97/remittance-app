@@ -4,9 +4,10 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { theme } from '../../constants/theme';
 import { i18n } from '../../locales/i18n';
 import { PeriodSelector } from '../../components/dashboard/PeriodSelector';
@@ -34,6 +35,8 @@ import { SpendingCategory } from '../../types';
 import { TransactionRow } from '../../services/db';
 import { CATEGORY_KEYS } from '../../constants/categories';
 
+// ─── Helpers ────────────────────────────────────────────────────────────────
+
 function presetToDates(
   preset: PeriodPreset,
   custom: { from: string; to: string } | null
@@ -50,6 +53,54 @@ function presetToDates(
   return daysToDateRange(daysMap[preset] ?? 30);
 }
 
+function formatDateShort(iso: string): string {
+  // "2026-03-01" → "Mar 1"
+  const d = new Date(iso + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function fmt(n: number): string {
+  if (n >= 1_000_000) return `₩${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 10_000) return `₩${Math.round(n / 1_000)}K`;
+  return `₩${n.toLocaleString()}`;
+}
+
+// ─── Inline SectionHeader component (not exported) ───────────────────────────
+
+function SectionHeader({ label }: { label: string }) {
+  return (
+    <View style={sectionStyles.row}>
+      <View style={sectionStyles.accent} />
+      <Text style={sectionStyles.label}>{label}</Text>
+    </View>
+  );
+}
+
+const sectionStyles = StyleSheet.create({
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: theme.spacing.sm,
+    marginTop: theme.spacing.sm,
+    gap: 8,
+  },
+  accent: {
+    width: 3,
+    height: 16,
+    borderRadius: 2,
+    backgroundColor: theme.colors.primary,
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '700',
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+    color: theme.colors.textMuted,
+  },
+});
+
+// ─── Screen ──────────────────────────────────────────────────────────────────
+
 export default function DashboardScreen() {
   const language = useAppStore((s) => s.language);
   void language; // Re-render when language changes so i18n strings update
@@ -64,7 +115,11 @@ export default function DashboardScreen() {
   );
 
   const daysDiff = useMemo(() => {
-    return Math.round((new Date(to).getTime() - new Date(from).getTime()) / 86_400_000) + 1;
+    return (
+      Math.round(
+        (new Date(to).getTime() - new Date(from).getTime()) / 86_400_000
+      ) + 1
+    );
   }, [from, to]);
 
   const { data: transactions = [] } = useTransactionsInRange(from, to);
@@ -96,15 +151,20 @@ export default function DashboardScreen() {
 
   const categoryList = useMemo(
     () =>
-      CATEGORY_KEYS.filter((cat) => (byCategory[cat]?.length ?? 0) > 0).map((cat) => ({
-        category: cat as SpendingCategory,
-        total: byCategory[cat]?.reduce((s, t) => s + t.amount_krw, 0) ?? 0,
-        transactions: byCategory[cat] ?? [],
-      })),
+      CATEGORY_KEYS.filter((cat) => (byCategory[cat]?.length ?? 0) > 0).map(
+        (cat) => ({
+          category: cat as SpendingCategory,
+          total: byCategory[cat]?.reduce((s, t) => s + t.amount_krw, 0) ?? 0,
+          transactions: byCategory[cat] ?? [],
+        })
+      ),
     [byCategory]
   );
 
-  const handlePeriodChange = (preset: PeriodPreset, custom?: { from: string; to: string }) => {
+  const handlePeriodChange = (
+    preset: PeriodPreset,
+    custom?: { from: string; to: string }
+  ) => {
     setSelectedPeriod(preset);
     if (preset === 'custom' && custom) setCustomDateRange(custom);
   };
@@ -115,39 +175,89 @@ export default function DashboardScreen() {
 
   const hasData = transactions.length > 0;
 
+  // Net flow
+  const netFlow = totalIncome - stats.totalSpent;
+  const netPositive = netFlow >= 0;
+  const showNetFlow = totalIncome > 0;
+
+  // Period subtitle text
+  const periodSubtitle =
+    selectedPeriod === 'today'
+      ? 'Today'
+      : selectedPeriod === 'custom'
+      ? `${formatDateShort(from)} – ${formatDateShort(to)}`
+      : `${formatDateShort(from)} – ${formatDateShort(to)}`;
+
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <View style={styles.header}>
-        <View>
-          <Text style={styles.title}>{i18n.t('dashboard.title')}</Text>
-          <Text style={styles.subtitle}>
-            {i18n.t('dashboard.subtitle')}
-          </Text>
-        </View>
-      </View>
+      {/* Sticky PeriodSelector strip */}
+      <PeriodSelector
+        value={selectedPeriod}
+        customRange={customDateRange}
+        onChange={handlePeriodChange}
+      />
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Period selector and hero summary */}
-        <PeriodSelector
-          value={selectedPeriod}
-          customRange={customDateRange}
-          onChange={handlePeriodChange}
-        />
+        {/* ── Hero Header (inside ScrollView) ── */}
+        <View style={styles.heroHeader}>
+          <View style={styles.heroLeft}>
+            <Text style={styles.heroTitle}>{i18n.t('dashboard.title')}</Text>
+            <Text style={styles.heroSubtitle}>{periodSubtitle}</Text>
+          </View>
+          <View style={styles.heroIconBtn}>
+            <Ionicons
+              name="bar-chart-outline"
+              size={20}
+              color={theme.colors.primaryLight}
+            />
+          </View>
+        </View>
+
+        {/* ── Summary Card ── */}
         <SummaryCard stats={stats} compact={!hasData} />
+
+        {/* ── Net Flow chip ── */}
+        {showNetFlow && (
+          <View style={styles.netFlowRow}>
+            <Ionicons
+              name={netPositive ? 'trending-up-outline' : 'trending-down-outline'}
+              size={15}
+              color={netPositive ? theme.colors.success : theme.colors.error}
+              style={{ marginRight: 5 }}
+            />
+            <Text
+              style={[
+                styles.netFlowLabel,
+                { color: netPositive ? theme.colors.success : theme.colors.error },
+              ]}
+            >
+              NET FLOW
+            </Text>
+            <Text
+              style={[
+                styles.netFlowValue,
+                { color: netPositive ? theme.colors.success : theme.colors.error },
+              ]}
+            >
+              {netPositive ? '+' : ''}
+              {fmt(netFlow)}
+            </Text>
+            <Text style={styles.netFlowSub}>
+              {netPositive ? 'surplus' : 'deficit'} this period
+            </Text>
+          </View>
+        )}
 
         {!hasData ? (
           <EmptyState />
         ) : (
           <>
-            {/* Donut chart */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>
-                {i18n.t('dashboard.spendingByCategory')}
-              </Text>
-            </View>
+            {/* ── Spending by Category ── */}
+            <SectionHeader label={i18n.t('dashboard.spendingByCategory')} />
             <View style={styles.card}>
               <DonutChart
                 data={categoryList.map((c) => ({
@@ -157,7 +267,7 @@ export default function DashboardScreen() {
               />
             </View>
 
-            {/* Bar chart — auto-granularity */}
+            {/* ── Bar Chart ── */}
             <SpendingBarChart
               dailyData={dailyData}
               weeklyData={weeklyData}
@@ -165,18 +275,18 @@ export default function DashboardScreen() {
               daysDiff={daysDiff}
             />
 
-            {/* Income vs Spending line chart */}
+            {/* ── Income vs Spending ── */}
             <SpendingVsIncome
               monthlySpending={monthlyData}
               income={incomeData}
             />
 
-            {/* Remittance timeline */}
+            {/* ── Remittance Timeline ── */}
             {remittances.length > 0 && (
               <RemittanceTimeline remittances={remittances} />
             )}
 
-            {/* Savings progress */}
+            {/* ── Savings Progress ── */}
             {savingsGoal && totalIncome > 0 && (
               <SavingsProgress
                 totalSpent={stats.totalSpent}
@@ -185,12 +295,8 @@ export default function DashboardScreen() {
               />
             )}
 
-            {/* Category cards */}
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>
-                {i18n.t('dashboard.transactions')}
-              </Text>
-            </View>
+            {/* ── Category Breakdown ── */}
+            <SectionHeader label={i18n.t('dashboard.transactions')} />
 
             {categoryList.map((item) => (
               <CategoryCard
@@ -199,6 +305,7 @@ export default function DashboardScreen() {
                 total={item.total}
                 transactions={item.transactions}
                 onDeleteTransaction={handleDelete}
+                grandTotal={stats.totalSpent}
               />
             ))}
           </>
@@ -213,41 +320,76 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  header: {
-    paddingHorizontal: theme.spacing.lg,
-    paddingTop: theme.spacing.md,
-    paddingBottom: theme.spacing.md,
-    backgroundColor: theme.colors.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: theme.colors.textPrimary,
-    letterSpacing: -0.3,
-  },
-  subtitle: {
-    fontSize: theme.fontSize.sm,
-    color: theme.colors.textMuted,
-    marginTop: 4,
-    letterSpacing: 0.1,
-  },
   scroll: { flex: 1 },
   scrollContent: {
     padding: theme.spacing.lg,
     paddingBottom: theme.spacing.xl * 2,
   },
-  sectionHeader: {
+
+  // Hero header
+  heroHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: theme.spacing.sm,
-    marginTop: theme.spacing.sm,
   },
-  sectionTitle: {
-    fontSize: theme.fontSize.md,
-    fontWeight: '600',
+  heroLeft: {
+    flex: 1,
+  },
+  heroTitle: {
+    fontSize: 26,
+    fontWeight: '700',
     color: theme.colors.textPrimary,
-    letterSpacing: 0.2,
+    letterSpacing: -0.4,
   },
+  heroSubtitle: {
+    fontSize: theme.fontSize.sm,
+    color: theme.colors.textMuted,
+    marginTop: 3,
+    letterSpacing: 0.1,
+  },
+  heroIconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: theme.radius.full,
+    backgroundColor: theme.colors.bg2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    marginLeft: theme.spacing.md,
+  },
+
+  // Net flow chip
+  netFlowRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: theme.colors.bg2,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.radius.full,
+    paddingHorizontal: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+    marginBottom: theme.spacing.md,
+    gap: 4,
+    alignSelf: 'flex-start',
+  },
+  netFlowLabel: {
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 0.8,
+    textTransform: 'uppercase',
+  },
+  netFlowValue: {
+    fontSize: theme.fontSize.sm,
+    fontWeight: '700',
+  },
+  netFlowSub: {
+    fontSize: theme.fontSize.xs,
+    color: theme.colors.textMuted,
+  },
+
+  // Donut card wrapper
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.radius.xl,

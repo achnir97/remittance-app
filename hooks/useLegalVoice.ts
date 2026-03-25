@@ -1,11 +1,21 @@
 // Requires: npx expo install expo-av
 import { useState, useCallback, useRef } from 'react';
-import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
 import { legalApi } from '../services/legal';
 import { LegalChatMessage, LegalDomain } from '../types';
 import { useAppStore } from '../store/useAppStore';
 import { i18n } from '../locales/i18n';
+
+// Lazy-load expo-av so the app doesn't crash in Expo Go if ExponentAV
+// native module is not bundled. All audio calls are guarded at runtime.
+let Audio: typeof import('expo-av').Audio | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  Audio = require('expo-av').Audio;
+} catch {
+  // ExponentAV native module not available in this environment (e.g. Expo Go).
+  // Voice features will be gracefully disabled.
+}
 
 export type VoiceStatus = 'idle' | 'recording' | 'processing' | 'playing' | 'error';
 
@@ -18,11 +28,16 @@ export function useLegalVoice(domain: LegalDomain) {
   const language = useAppStore((s) => s.language);
   const [status, setStatus] = useState<VoiceStatus>('idle');
   const [error, setError] = useState<string | null>(null);
-  const recordingRef = useRef<Audio.Recording | null>(null);
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const recordingRef = useRef<InstanceType<typeof Audio.Recording> | null>(null);
+  const soundRef = useRef<InstanceType<typeof Audio.Sound> | null>(null);
 
   const startRecording = useCallback(async () => {
     setError(null);
+    if (!Audio) {
+      setError(i18n.t('legal.errors.voiceUnavailable'));
+      setStatus('error');
+      return false;
+    }
     try {
       const { granted } = await Audio.requestPermissionsAsync();
       if (!granted) {
@@ -87,7 +102,7 @@ export function useLegalVoice(domain: LegalDomain) {
       onResult(msg, data.audio_response);
 
       // Play audio response if present
-      if (data.audio_response) {
+      if (data.audio_response && Audio) {
         setStatus('playing');
         await Audio.setAudioModeAsync({ allowsRecordingIOS: false, playsInSilentModeIOS: true });
         const audioUri = `data:audio/mp3;base64,${data.audio_response}`;
