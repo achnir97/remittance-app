@@ -101,6 +101,9 @@ export default function SettingsScreen() {
                 index < LANGUAGES.length - 1 && styles.langRowBorder,
               ]}
               activeOpacity={0.7}
+              accessibilityLabel={lang.nativeLabel}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: language === lang.code }}
             >
               <Text style={styles.langLabel}>{lang.nativeLabel}</Text>
               {language === lang.code && (
@@ -142,6 +145,8 @@ export default function SettingsScreen() {
                 style={styles.profileRow}
                 onPress={() => router.navigate('/(onboarding)/user-type' as never)}
                 activeOpacity={0.7}
+                accessibilityLabel={`Profile type: ${meta.label}. Tap to change`}
+                accessibilityRole="button"
               >
                 <View style={[styles.profileIconBox, { backgroundColor: meta.color + '18' }]}>
                   <Text style={{ fontSize: 22 }}>{meta.emoji}</Text>
@@ -158,6 +163,9 @@ export default function SettingsScreen() {
               style={styles.profileRow}
               onPress={() => router.navigate('/(onboarding)/user-type' as never)}
               activeOpacity={0.7}
+              accessibilityLabel="Set your profile type"
+              accessibilityHint="Personalize Bridge for your needs"
+              accessibilityRole="button"
             >
               <View style={[styles.profileIconBox, { backgroundColor: theme.colors.bg3 }]}>
                 <Ionicons name="person-outline" size={22} color={theme.colors.textMuted} />
@@ -179,7 +187,13 @@ export default function SettingsScreen() {
             <Text style={styles.accountEmail} numberOfLines={1}>{user?.email ?? '—'}</Text>
           </View>
           <View style={styles.divider} />
-          <TouchableOpacity style={styles.signOutRow} onPress={handleSignOut} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.signOutRow}
+            onPress={handleSignOut}
+            activeOpacity={0.7}
+            accessibilityLabel="Sign out"
+            accessibilityRole="button"
+          >
             <Ionicons name="log-out-outline" size={18} color={theme.colors.error} />
             <Text style={styles.signOutText}>Sign Out</Text>
           </TouchableOpacity>
@@ -201,6 +215,8 @@ export default function SettingsScreen() {
                     key={name}
                     onPress={() => Linking.openURL(PROVIDER_LINKS[name].web)}
                     style={[styles.providerLinkBtn, { backgroundColor: theme.colors.bg2, borderWidth: 1, borderColor: theme.colors.border }]}
+                    accessibilityLabel={`Open ${name} website`}
+                    accessibilityRole="link"
                   >
                     <Text style={[styles.providerLinkText, { color: meta.color }]}>
                       {name}

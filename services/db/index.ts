@@ -21,6 +21,7 @@ export {
   updateTransactionStatus,
   getRecentTransactions,
   getTransactionsInRange,
+  getTransactionsPage,
   getPendingScans,
   getSpendingByCategory,
   getDailyTotals,

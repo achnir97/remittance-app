@@ -125,6 +125,26 @@ export async function getTransactionsInRange(
   );
 }
 
+/** Paginated variant — used by the transaction list UI to avoid loading 500+ rows at once. */
+export async function getTransactionsPage(
+  from: string,
+  to: string,
+  limit: number,
+  offset: number
+): Promise<TransactionRow[]> {
+  const db = await getDb();
+  return db.getAllAsync<TransactionRow>(
+    `SELECT * FROM transactions
+     WHERE date BETWEEN ? AND ? AND status = 'confirmed'
+     ORDER BY date DESC, created_at DESC
+     LIMIT ? OFFSET ?`,
+    from,
+    to,
+    limit,
+    offset
+  );
+}
+
 export async function getPendingScans(): Promise<TransactionRow[]> {
   const db = await getDb();
   return db.getAllAsync<TransactionRow>(

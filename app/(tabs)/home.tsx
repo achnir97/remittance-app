@@ -311,6 +311,9 @@ function FeatureCard({ feature, onPress }: { feature: Feature; onPress?: () => v
       style={[styles.featureCard, feature.soon && styles.featureCardSoon]}
       onPress={feature.soon ? undefined : onPress}
       activeOpacity={feature.soon ? 1 : 0.78}
+      accessibilityLabel={feature.soon ? `${feature.label}, coming soon` : feature.label}
+      accessibilityHint={feature.soon ? undefined : feature.desc}
+      accessibilityRole="button"
     >
       <View style={styles.featureCardTop}>
         <View style={[styles.featureIconBox, { backgroundColor: feature.bg }]}>
@@ -358,7 +361,12 @@ export default function HomeScreen() {
               <Text style={styles.brandTagline}>Life in Korea, simplified</Text>
             </View>
           </View>
-          <TouchableOpacity onPress={() => router.navigate('/(tabs)/settings' as never)}>
+          <TouchableOpacity
+            onPress={() => router.navigate('/(tabs)/settings' as never)}
+            accessibilityLabel="Settings"
+            accessibilityHint="Open your profile and settings"
+            accessibilityRole="button"
+          >
             <View style={styles.avatarCircle}>
               <Ionicons name="person-outline" size={18} color={theme.colors.textSecondary} />
             </View>
@@ -374,6 +382,9 @@ export default function HomeScreen() {
           <TouchableOpacity
             onPress={() => router.navigate('/(onboarding)/user-type' as never)}
             style={styles.changeTypeBtn}
+            accessibilityLabel="Switch user type"
+            accessibilityHint="Change your profile between Worker, Student, and Professional"
+            accessibilityRole="button"
           >
             <Text style={styles.changeTypeText}>Switch</Text>
             <Ionicons name="swap-horizontal-outline" size={12} color={theme.colors.textMuted} />
@@ -423,6 +434,9 @@ export default function HomeScreen() {
                 style={styles.quickBtn}
                 onPress={() => f.route && router.navigate(f.route as never)}
                 activeOpacity={0.78}
+                accessibilityLabel={f.label}
+                accessibilityHint={f.desc}
+                accessibilityRole="button"
               >
                 <View style={[styles.quickIcon, { backgroundColor: f.bg }]}>
                   <Ionicons name={f.icon} size={22} color={f.color} />

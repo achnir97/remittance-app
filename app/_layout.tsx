@@ -16,6 +16,10 @@ import { cleanupOldReceiptImages } from '../services/imageProcessor';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { supabase } from '../lib/supabase';
 import { theme } from '../constants/theme';
+import { initSentry, captureError, setUserContext, clearUserContext } from '../lib/sentry';
+
+// Initialise Sentry as early as possible (before any component renders)
+initSentry();
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,12 +43,26 @@ export default function RootLayout() {
     i18n.locale = normalizeLocale(language);
   }, [language]);
 
+  // Catch unhandled promise rejections that ErrorBoundary cannot catch
+  useEffect(() => {
+    const handler = (event: PromiseRejectionEvent) => {
+      captureError(event.reason, { source: 'unhandledRejection' });
+    };
+    // @ts-expect-error — RN supports this on newer Hermes but TS types lag
+    global.addEventListener?.('unhandledrejection', handler);
+    return () => {
+      // @ts-expect-error
+      global.removeEventListener?.('unhandledrejection', handler);
+    };
+  }, []);
+
   // Bootstrap Supabase session on mount, then subscribe to auth changes
   useEffect(() => {
     // Load existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setAuth(session.user, session);
+        setUserContext(session.user.id, session.user.email ?? undefined);
       } else {
         clearAuth();
       }
@@ -56,8 +74,10 @@ export default function RootLayout() {
       (_event, session) => {
         if (session?.user) {
           setAuth(session.user, session);
+          setUserContext(session.user.id, session.user.email ?? undefined);
         } else {
           clearAuth();
+          clearUserContext();
         }
       }
     );

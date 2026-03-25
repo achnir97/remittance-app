@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { theme } from '../constants/theme';
+import { captureError } from '../lib/sentry';
 
 interface Props {
   children: React.ReactNode;
@@ -22,7 +23,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error('[ErrorBoundary] Uncaught error:', error.message, info.componentStack);
+    captureError(error, { componentStack: info.componentStack ?? '' });
   }
 
   handleReset = () => {
@@ -38,7 +39,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
           <Text style={styles.message} numberOfLines={3}>
             {this.state.errorMessage || 'An unexpected error occurred.'}
           </Text>
-          <TouchableOpacity style={styles.button} onPress={this.handleReset}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={this.handleReset}
+            accessibilityLabel="Try again"
+            accessibilityHint="Attempts to recover from the error"
+          >
             <Text style={styles.buttonText}>Try Again</Text>
           </TouchableOpacity>
         </View>
@@ -76,7 +82,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   button: {
-    backgroundColor: theme.colors.blue,
+    backgroundColor: theme.colors.primary, // was theme.colors.blue (inverted alias)
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: theme.radius.full,

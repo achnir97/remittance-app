@@ -1,10 +1,11 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   getRecentTransactions,
   insertTransactionFromOCR,
   deleteTransaction,
   updateTransactionCategory,
   getTransactionsInRange,
+  getTransactionsPage,
   getSpendingByCategory,
   getDailyTotals,
   getWeeklyTotals,
@@ -17,6 +18,8 @@ import {
   TransactionRow,
 } from '../services/db';
 import { OCRResult, SpendingCategory } from '../types';
+
+const PAGE_SIZE = 50;
 
 const RECENT_KEY = ['transactions', 'recent'];
 const RANGE_KEY = (from: string, to: string) => ['transactions', 'range', from, to];
@@ -45,6 +48,26 @@ export function useTransactionsInRange(from: string, to: string) {
   return useQuery({
     queryKey: RANGE_KEY(from, to),
     queryFn: () => getTransactionsInRange(from, to),
+    enabled: !!from && !!to,
+    staleTime: STALE_2MIN,
+  });
+}
+
+/**
+ * Paginated transaction list for the dashboard transaction view.
+ * Fetches PAGE_SIZE (50) rows at a time; call `fetchNextPage()` to load more.
+ * Prevents loading 500+ rows at once when the user has a long history.
+ */
+export function useTransactionsInRangePaginated(from: string, to: string) {
+  return useInfiniteQuery({
+    queryKey: [...RANGE_KEY(from, to), 'paginated'],
+    queryFn: ({ pageParam = 0 }) =>
+      getTransactionsPage(from, to, PAGE_SIZE, pageParam as number),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      if (lastPage.length < PAGE_SIZE) return undefined;
+      return allPages.length * PAGE_SIZE;
+    },
     enabled: !!from && !!to,
     staleTime: STALE_2MIN,
   });

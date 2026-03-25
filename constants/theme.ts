@@ -32,9 +32,9 @@ export const theme = {
     violet: '#9B72FF',
     ink: '#0C1220',
 
-    // Backward-compatible aliases (do not remove)
-    green: '#1B6FEB',
-    blue: '#00C896',
+    // Backward-compatible aliases — match their semantic names correctly
+    green: '#00C896',  // emerald (was incorrectly pointing to sapphire)
+    blue: '#1B6FEB',   // sapphire (was incorrectly pointing to emerald)
     amber: '#F5A623',
     red: '#FF4D6D',
     yellow: '#F5A623',

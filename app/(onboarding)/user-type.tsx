@@ -115,6 +115,10 @@ function TypeCardItem({
         onPress={onPress}
         activeOpacity={0.85}
         style={styles.cardInner}
+        accessibilityLabel={`${card.title}${selected ? ', selected' : ''}`}
+        accessibilityHint={card.subtitle}
+        accessibilityRole="radio"
+        accessibilityState={{ checked: selected }}
       >
         {/* Badge */}
         {card.badge && (
@@ -246,6 +250,9 @@ export default function UserTypeScreen() {
               onPress={handleContinue}
               disabled={!selected}
               activeOpacity={0.88}
+              accessibilityLabel={selected ? `Continue as ${selectedCard?.title}` : 'Select who you are to continue'}
+              accessibilityRole="button"
+              accessibilityState={{ disabled: !selected }}
             >
               <Text style={styles.ctaBtnText}>
                 {selected
